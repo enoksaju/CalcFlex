@@ -1,0 +1,100 @@
+<ion-header translucent>
+    <ion-toolbar color="secondary">
+        <ion-icon name="settings" color="light" size="large" slot="start"></ion-icon>
+        <ion-title color="light">Editar Datos de Trabajo</ion-title>
+    </ion-toolbar>
+</ion-header>
+<ion-content fullscreen>
+    <ion-card>
+        <ion-item>
+            <ion-avatar slot="start" fxLayoutAlign="center center">
+                <ion-icon name="albums" size="large" color="secondary"></ion-icon>
+            </ion-avatar>
+
+            <ion-label text-wrap>
+                <ion-text color="dark"><h2>Material:</h2> </ion-text>
+                <ion-text color="dark">
+                    <h3>{{ workConfig.Material.Nombre }}</h3>
+                </ion-text>
+                <ion-text color="medium">
+                    <p>{{ workConfig.Material.Densidad }} g/cm<sup>3</sup></p>
+                </ion-text>
+            </ion-label>
+            <ion-select
+                [(ngModel)]="workConfig.Material"
+                [selectedText]="workConfig.Material.Abreviatura"
+                [interfaceOptions]="{ header: 'Seleccione el Material' }"
+                placeholder="Select One"
+                interface="action-sheet"
+            >
+                <ion-select-option [value]="material" *ngFor="let material of Materiales">
+                    ({{ material.Abreviatura }}) - {{ material.Nombre }}
+                </ion-select-option>
+            </ion-select>
+        </ion-item>
+        <ion-item>
+            <ion-avatar slot="start" fxLayoutAlign="center center">
+                <ion-icon
+                    size="large"
+                    color="secondary"
+                    src="assets/icons/md-vertical-align.svg"
+                ></ion-icon>
+            </ion-avatar>
+            <ion-label position="stacked">Calibre</ion-label>
+            <ion-input
+                type="number"
+                color="medium"
+                [(ngModel)]="workConfig.Calibre"
+                placeholder="0"
+                clearInput
+            ></ion-input>
+            <ion-note color="medium" slot="end"><span>&#181;</span>m</ion-note>
+        </ion-item>
+        <ion-item>
+            <ion-avatar slot="start" fxLayoutAlign="center center">
+                <ion-icon name="swap" size="large" color="secondary"></ion-icon>
+            </ion-avatar>
+            <ion-label position="stacked">Ancho del Material</ion-label>
+            <ion-input
+                type="number"
+                color="medium"
+                [(ngModel)]="workConfig.Ancho"
+                placeholder="0"
+                clearInput
+            ></ion-input>
+            <ion-note color="medium" slot="end">cm</ion-note>
+        </ion-item>
+        <ion-item>
+            <ion-avatar slot="start" fxLayoutAlign="center center">
+                <ion-icon name="color-fill" size="large" color="secondary"></ion-icon>
+            </ion-avatar>
+            <ion-label position="stacked">Gramos de Tinta</ion-label>
+            <ion-input
+                type="number"
+                color="medium"
+                [(ngModel)]="workConfig.Tinta"
+                placeholder="0"
+                clearInput
+            ></ion-input>
+            <ion-note color="medium" slot="end">g/cm<sup>2</sup></ion-note>
+        </ion-item>
+        <ion-item>
+            <ion-avatar slot="start" fxLayoutAlign="center center">
+                <ion-icon name="speedometer" size="large" color="secondary"></ion-icon>
+            </ion-avatar>
+            <ion-label position="stacked">Velocidad</ion-label>
+            <ion-input
+                type="number"
+                color="medium"
+                [(ngModel)]="workConfig.Velocidad"
+                placeholder="0"
+                clearInput
+            ></ion-input>
+            <ion-note color="medium" slot="end">m/min</ion-note>
+        </ion-item>
+        <ion-item>
+            <ion-button (click)="close()" slot="start" color="danger">Cancelar</ion-button>
+            <ion-button (click)="closeAndSave()" slot="end" color="success">Aceptar</ion-button>
+        </ion-item>
+    </ion-card>
+</ion-content>

@@ -1,0 +1,120 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"> <ion-menu-button></ion-menu-button> </ion-buttons>
+    <ion-title> Metros Lineales </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content>
+  <div fxFlexFill fxLayout="column">
+    <ion-item lines="full" detail (click)="setWorkData()">
+      <!--
+        <ion-avatar slot="start" fxLayoutAlign="center center">
+            <ion-icon name="construct" size="large" color="secondary"></ion-icon>
+        </ion-avatar>
+      -->
+
+      <ion-label text-wrap>
+        <ion-text color="dark"> {{ CurrentWork.Material.Nombre }} </ion-text>
+        <ion-text color="medium">
+          <p>
+            <span fxFlex="50%">
+              <ion-icon name="cube" color="secondary"></ion-icon>
+              {{ CurrentWork.Material.Densidad }} g/cm<sup>3</sup>
+            </span>
+            <span fxFlex="50%">
+              <ion-icon color="secondary" src="assets/icons/md-vertical-align.svg"></ion-icon>
+              {{ CurrentWork.Calibre }}<span>&#181;</span>m
+            </span>
+          </p>
+        </ion-text>
+        <ion-text color="medium">
+          <p>
+            <span fxFlex="50%">
+              <ion-icon name="swap" color="secondary"></ion-icon>
+              {{ CurrentWork.Ancho }} g/cm<sup>3</sup>
+            </span>
+            <span fxFlex="50%">
+              <ion-icon name="color-fill" color="secondary"></ion-icon>
+              {{ CurrentWork.Tinta }}g/cm<sup>2</sup>
+            </span>
+          </p>
+        </ion-text>
+        <ion-text color="medium">
+          <p>
+            <span fxFlex="50%">
+              <ion-icon name="speedometer" color="secondary"></ion-icon>
+              {{ CurrentWork.Velocidad }} m/min
+            </span>
+            <span fxFlex="50%"> </span>
+          </p>
+        </ion-text>
+      </ion-label>
+    </ion-item>
+    <ion-content>
+      <!--
+        <ion-fab vertical="top" horizontal="end" edge slot="fixed" (click)="setWorkData()">
+            <ion-fab-button mini color="tertiary" translucent="true">
+                <ion-icon color="light" name="create"></ion-icon>
+            </ion-fab-button>
+        </ion-fab>
+      -->
+
+      <ion-tabs #tabs_ml>
+        <ion-tab tab="tab-kgml">
+          <ion-content scrollY="true">
+            <ion-item>
+              <ion-label>Cantidad</ion-label>
+              <ion-input [(ngModel)]="CurrentWork.Cantidad" type="number" (ionChange)="calculate()" min="0"></ion-input>
+            </ion-item>
+            {{ CurrentWork | json }}
+          </ion-content>
+        </ion-tab>
+        <ion-tab tab="tab-mlkg">
+          <ion-content scrollY="true">
+            <ion-item>
+              <ion-label>Metros Lineales</ion-label>
+              <ion-input [(ngModel)]="CurrentWork.Metros" type="number" (ionChange)="calculate()" min="0"></ion-input>
+            </ion-item>
+            {{ CurrentWork | json }}
+          </ion-content>
+        </ion-tab>
+
+        <ion-tab-bar slot="bottom" (ionTabBarChanged)="changeTab(tabs_ml)">
+          <ion-tab-button tab="tab-kgml">
+            <i class="fas fa-weight-hanging"></i>
+            <ion-label>Kg a m</ion-label>
+          </ion-tab-button>
+          <ion-tab-button tab="tab-mlkg">
+            <i class="fas fa-ruler-horizontal"></i>
+            <ion-label>m a Kg</ion-label>
+          </ion-tab-button>
+        </ion-tab-bar>
+      </ion-tabs>
+    </ion-content>
+    <!--
+      <ion-item fxLayout="row" fxFlex="100%">
+          <ion-tabs>
+              <ion-tab tab="tab-schedule"
+                  ><ion-content scrollY="true">
+                      <p>Tab1</p>
+                      <br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.<br />.
+                  </ion-content></ion-tab
+              >
+              <ion-tab tab="tab-speaker"><p>Tab2</p> </ion-tab>
+
+              <ion-tab-bar slot="bottom">
+                  <ion-tab-button tab="tab-schedule">
+                      <i class="fas fa-weight-hanging"></i>
+                      <ion-label>Kg a m</ion-label>
+                  </ion-tab-button>
+                  <ion-tab-button tab="tab-speaker">
+                      <i class="fas fa-ruler-horizontal"></i>
+                      <ion-label>m a Kg</ion-label>
+                  </ion-tab-button>
+              </ion-tab-bar>
+          </ion-tabs>
+      </ion-item>
+    -->
+  </div>
+</ion-content>
