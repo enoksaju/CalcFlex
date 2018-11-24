@@ -1,33 +1,34 @@
 import { Component } from '@angular/core';
 
-import { Platform } from '@ionic/angular';
+import { Platform, IonicModule } from '@ionic/angular';
 import { SplashScreen } from '@ionic-native/splash-screen/ngx';
 import { StatusBar } from '@ionic-native/status-bar/ngx';
 import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { MaterialesService } from './Materiales.service';
 import { WorkConfigService } from './work-config.service';
+import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 
 @Component({
   selector: 'app-root',
-  templateUrl: 'app.component.html'
+  templateUrl: 'app.component.html',
 })
 export class AppComponent {
   public appPages = [
     {
       title: 'Home',
       url: '/home',
-      icon: 'home'
-    },
-    {
-      title: 'List',
-      url: '/list',
-      icon: 'list'
+      icon: 'home',
     },
     {
       title: 'Metros Lineales',
       url: '/ml',
-      icon: 'list'
-    }
+      srcIcon: 'assets/icons/ruler.svg',
+    },
+    {
+      title: 'Alto de Rollo',
+      url: '/altoRollo',
+      srcIcon: 'assets/icons/toilet-paper.svg',
+    },
   ];
 
   constructor(
@@ -36,13 +37,26 @@ export class AppComponent {
     private statusBar: StatusBar,
     private sqlite: SQLite,
     private materialesService: MaterialesService,
-    private workConfigService: WorkConfigService
+    private workConfigService: WorkConfigService,
+    private androidFullScreen: AndroidFullScreen,
   ) {
     this.initializeApp();
   }
 
   initializeApp() {
+    console.log(this.platform.platforms());
+
     this.platform.ready().then(() => {
+      this.androidFullScreen
+        .isImmersiveModeSupported()
+        .then(() => {
+          console.log('Immersive mode supported');
+          this.androidFullScreen.immersiveMode().then(() => {
+            console.log('set immersiveMode success');
+          });
+        })
+        .catch(err => console.log(err));
+
       this.statusBar.hide(); // .styleLightContent(); // .styleDefault();
       // this.splashScreen.hide();
       this.createDB();

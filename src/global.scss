@@ -1,26 +1,28 @@
 // http://ionicframework.com/docs/theming/
-@import "~@ionic/angular/css/core.css";
-@import "~@ionic/angular/css/normalize.css";
-@import "~@ionic/angular/css/structure.css";
-@import "~@ionic/angular/css/typography.css";
+@import '~@ionic/angular/css/core.css';
+@import '~@ionic/angular/css/normalize.css';
+@import '~@ionic/angular/css/structure.css';
+@import '~@ionic/angular/css/typography.css';
 
-@import "~@ionic/angular/css/padding.css";
-@import "~@ionic/angular/css/float-elements.css";
-@import "~@ionic/angular/css/text-alignment.css";
-@import "~@ionic/angular/css/text-transformation.css";
-@import "~@ionic/angular/css/flex-utils.css";
+@import '~@ionic/angular/css/padding.css';
+@import '~@ionic/angular/css/float-elements.css';
+@import '~@ionic/angular/css/text-alignment.css';
+@import '~@ionic/angular/css/text-transformation.css';
+@import '~@ionic/angular/css/flex-utils.css';
 
+@import '../src/theme/materialize.scss';
 
 /* FontAwesome Variables */
 
-$fa-font-path: "../node_modules/@fortawesome/fontawesome-free/webfonts";
+$fa-font-path: '../node_modules/@fortawesome/fontawesome-free/webfonts';
 $fa-font-size-base: 20px !default;
 $fa-css-prefix: 'fa';
+
 .#{$fa-css-prefix},
 .fas,
 .far,
 .fal,
-.fab{
+.fab {
   font-size: $fa-font-size-base;
   margin: 2px;
 }
@@ -28,40 +30,36 @@ $fa-css-prefix: 'fa';
 .fas,
 .far,
 .fal,
-.fab{
-  &.primary{
-    color:var(--ion-color-primary)
+.fab {
+  &.primary {
+    color: var(--ion-color-primary);
   }
-  &.secondary{
-    color:var(--ion-color-secondary)
+  &.secondary {
+    color: var(--ion-color-secondary);
   }
-  &.tertiary{
-    color:var(--ion-color-tertiary)
+  &.tertiary {
+    color: var(--ion-color-tertiary);
   }
-  &.success{
-    color:var(--ion-color-success)
+  &.success {
+    color: var(--ion-color-success);
   }
-  &.warning{
-    color:var(--ion-color-warning)
+  &.warning {
+    color: var(--ion-color-warning);
   }
-  &.danger{
-    color:var(--ion-color-danger)
+  &.danger {
+    color: var(--ion-color-danger);
   }
-  &.dark{
-    color:var(--ion-color-dark)
+  &.dark {
+    color: var(--ion-color-dark);
   }
-  &.medium{
-    color:var(--ion-color-medium)
+  &.medium {
+    color: var(--ion-color-medium);
   }
-  &.light{
-    color:var(--ion-color-light)
+  &.light {
+    color: var(--ion-color-light);
   }
 }
 
-
-@import "~@fortawesome/fontawesome-free/scss/fontawesome.scss";
-@import "~@fortawesome/fontawesome-free/scss/solid.scss";
-@import "~@fortawesome/fontawesome-free/scss/regular.scss";
-
-
-
+@import '~@fortawesome/fontawesome-free/scss/fontawesome.scss';
+@import '~@fortawesome/fontawesome-free/scss/solid.scss';
+@import '~@fortawesome/fontawesome-free/scss/regular.scss';

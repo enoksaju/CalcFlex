@@ -14,24 +14,14 @@ import { AppRoutingModule } from './app-routing.module';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { ConfigWorkComponent } from './modals/config-work/config-work.component';
 import { IonicStorageModule } from '@ionic/storage';
+import { SocialSharing } from '@ionic-native/social-sharing/ngx';
+import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 
 @NgModule({
   declarations: [AppComponent, ConfigWorkComponent],
   entryComponents: [ConfigWorkComponent],
-  imports: [
-    BrowserModule,
-    FormsModule,
-    FlexLayoutModule,
-    IonicModule.forRoot(),
-    IonicStorageModule.forRoot(),
-    AppRoutingModule
-  ],
-  providers: [
-    StatusBar,
-    SplashScreen,
-    SQLite,
-    { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }
-  ],
-  bootstrap: [AppComponent]
+  imports: [BrowserModule, FormsModule, FlexLayoutModule, IonicModule.forRoot(), IonicStorageModule.forRoot(), AppRoutingModule],
+  providers: [StatusBar, SplashScreen, SQLite, SocialSharing, AndroidFullScreen, { provide: RouteReuseStrategy, useClass: IonicRouteStrategy }],
+  bootstrap: [AppComponent],
 })
 export class AppModule {}

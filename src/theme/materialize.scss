@@ -1,0 +1,21 @@
+@charset "UTF-8";
+
+// Color
+@import '~materialize-css/sass/components/color-variables';
+@import '~materialize-css/sass/components/color-classes';
+
+// Variables;
+@import '~materialize-css/sass/components/variables';
+
+// Reset
+@import '~materialize-css/sass/components/normalize';
+@import '~materialize-css/sass/components/global';
+@import '~materialize-css/sass/components/grid';
+@import '~materialize-css/sass/components/typography';
+@import '~materialize-css/sass/components/cards';
+@import '~materialize-css/sass/components/buttons';
+
+.m-label {
+  font-size: 10pt;
+  color: $input-border-color;
+}

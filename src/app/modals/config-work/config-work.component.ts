@@ -14,12 +14,14 @@ export class ConfigWorkComponent implements OnInit, OnDestroy {
   $workConfig: Subscription;
   Materiales: IMaterial[];
   $Materiales: Subscription;
-  constructor(public modalController: ModalController, private navParams: NavParams, private workConfigService: WorkConfigService, private materialesService: MaterialesService) {}
+  constructor(public modalController: ModalController, private navParams: NavParams, private workConfigService: WorkConfigService, private materialesService: MaterialesService) {
+    this.$Materiales = this.materialesService.Materiales().subscribe(u => (this.Materiales = u));
+  }
 
   ngOnInit() {
     // this.workConfig = this.navParams.get('data');
-    this.$workConfig = this.workConfigService.WorkConfig().subscribe(u => (this.workConfig = u));
-    this.$Materiales = this.materialesService.Materiales().subscribe(u => (this.Materiales = u));
+    
+    this.$workConfig = this.workConfigService.WorkConfig().subscribe(u => (this.workConfig = u));   
   }
   ngOnDestroy() {
     this.$workConfig.unsubscribe();
