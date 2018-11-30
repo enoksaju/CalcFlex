@@ -103,7 +103,7 @@ export function CreateInstanceColorSpace(
 // #endregion
 
 // #region ColorSpace
-export interface IColorSpaceComparison {
+interface IColorSpaceComparison {
   Compare(a: IColorSpace, b: IColorSpace): number;
 }
 /*
@@ -142,7 +142,7 @@ export interface IColorSpace {
   ToString?(): string;
 }
 
-export abstract class ColorSpace implements IColorSpace {
+abstract class ColorSpace implements IColorSpace {
   readonly ColorSpaceName: string;
   public abstract initialize(color: IRgb): IColorSpace;
   public abstract ToRgb(): IRgb;
@@ -181,7 +181,7 @@ export abstract class ColorSpace implements IColorSpace {
 // #endregion
 
 //#region Cmy
-export interface ICmy extends IColorSpace {
+interface ICmy extends IColorSpace {
   C: number;
   M: number;
   Y: number;
@@ -217,7 +217,7 @@ export class Cmy extends ColorSpace implements ICmy {
   }
 }
 
-export class CmyConverter {
+class CmyConverter {
   static ToColorSpace(color: IRgb, item: ICmy) {
     item.C = 1 - color.R / 255.0;
     item.M = 1 - color.G / 255.0;
@@ -234,7 +234,7 @@ export function BasicallyEqualTo(a: number, b: number) {
   return Math.abs(this - b) <= DefaultPrecision;
 }
 
-export interface ICmyk extends IColorSpace {
+interface ICmyk extends IColorSpace {
   C: number;
   M: number;
   Y: number;
@@ -268,7 +268,7 @@ export class Cmyk extends ColorSpace implements ICmyk {
   }
 }
 
-export class CmykConverter {
+class CmykConverter {
   static ToColorSpace(color: IRgb, item: ICmyk) {
     const cmy = new Cmy();
     cmy.initialize(color);
@@ -309,7 +309,7 @@ export class CmykConverter {
 // #endregion
 
 // #region Hex
-export interface IHex extends IColorSpace {
+interface IHex extends IColorSpace {
   R: string;
   G: string;
   B: string;
@@ -395,7 +395,7 @@ export class Hex extends ColorSpace implements IHex {
   }
 }
 
-export class HexConverter {
+class HexConverter {
   static ToColorSpace(color: IRgb, item: IHex) {
     item.R = RoundAwayFromZero(color.R, 0).toString(16);
     item.G = RoundAwayFromZero(color.G, 0).toString(16);
@@ -409,7 +409,7 @@ export class HexConverter {
 // #endregion
 
 // #region Lab
-export interface ILab extends IColorSpace {
+interface ILab extends IColorSpace {
   L: number;
   A: number;
   B: number;
@@ -442,7 +442,7 @@ export class Lab extends ColorSpace implements ILab {
   }
 }
 
-export class LabConverter {
+class LabConverter {
   static ToColorSpace(color: IRgb, item: ILab) {
     const xyz = new Xyz();
     xyz.initialize(color);
@@ -482,7 +482,7 @@ export class LabConverter {
 // #endregion
 
 // #region Lch
-export interface ILch extends IColorSpace {
+interface ILch extends IColorSpace {
   L: number;
   C: number;
   H: number;
@@ -515,7 +515,7 @@ export class Lch extends ColorSpace implements ILch {
   }
 }
 
-export class LchConverter {
+class LchConverter {
   static ToColorSpace(color: IRgb, item: ILch) {
     const lab = color.To(ColorSpacesTypes.LAB) as Lab;
     let h = Math.atan2(lab.B, lab.A);
@@ -608,7 +608,7 @@ export class Rgb extends ColorSpace implements IRgb {
   }
 }
 
-export class RgbConverter {
+class RgbConverter {
   static ToColorSpace(color: IRgb, item: IRgb) {
     item.R = color.R;
     item.G = color.G;
@@ -622,7 +622,7 @@ export class RgbConverter {
 // #endregion
 
 // #region Xyz
-export interface IXyz extends IColorSpace {
+interface IXyz extends IColorSpace {
   X: number;
   Y: number;
   Z: number;
@@ -654,7 +654,7 @@ export class Xyz extends ColorSpace implements IXyz {
   }
 }
 
-export class XyzConverter {
+class XyzConverter {
   static ToColorSpace(color: IRgb, item: IXyz) {
     const r = this.PivotRgb(color.R / 255.0);
     const g = this.PivotRgb(color.G / 255.0);

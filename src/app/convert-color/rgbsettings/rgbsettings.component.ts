@@ -1,5 +1,5 @@
 import { Component, OnInit, Input } from '@angular/core';
-import { Rgb, ColorSpacesTypes, Hex, ColorSpace, IColorSpace, IConverters, Cmy, Cmyk, Lab, Lch, Xyz } from '../../color-library/color-space';
+import { Rgb, ColorSpacesTypes, Hex, IConverters, Cmy, Cmyk, Lab, Lch, Xyz } from '../../color-library/color-space';
 
 @Component({
   selector: 'app-rgbsettings',
