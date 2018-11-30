@@ -1,0 +1,14 @@
+<ion-list lines="none">
+  <ion-item>
+    <ion-range [(ngModel)]="converters.rgb.R" color="red" min="0" max="255" step="1" (ionChange)="change()"> </ion-range>
+    <div slot="end" style="width: 30px; margin: 0px;">{{ converters.rgb.R ? converters.rgb.R : 0 }}</div>
+  </ion-item>
+  <ion-item>
+    <ion-range [(ngModel)]="converters.rgb.G" color="green" min="0" max="255" step="1" (ionChange)="change()"> </ion-range>
+    <div slot="end" style="width: 30px; margin: 0px;">{{ converters.rgb.G ? converters.rgb.G : 0 }}</div>
+  </ion-item>
+  <ion-item>
+    <ion-range [(ngModel)]="converters.rgb.B" color="blue" min="0" max="255" step="1" (ionChange)="change()"> </ion-range>
+    <div slot="end" style="width: 30px; margin: 0px;">{{ converters.rgb.B ? converters.rgb.B : 0 }}</div>
+  </ion-item>
+</ion-list>

@@ -12,7 +12,8 @@ const routes: Routes = [
     loadChildren: './home/home.module#HomePageModule',
   },
   { path: 'ml', loadChildren: './metros-lineales/metros-lineales.module#MetrosLinealesPageModule' },
-  { path: 'altoRollo', loadChildren: './alto-rollo/alto-rollo.module#AltoRolloPageModule' },
+  { path: 'altoRollo', loadChildren: './alto-rollo/alto-rollo.module#AltoRolloPageModule' }, 
+  { path: 'convertColor', loadChildren: './convert-color/convert-color.module#ConvertColorPageModule' },
 ];
 
 @NgModule({

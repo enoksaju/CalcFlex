@@ -17,12 +17,16 @@ export interface IWorkConfig {
   CantidadRollo?: number;
   Metros?: number;
   AltoRollo?: number;
+  LargoRollo?: number;
   Gramaje?: number;
   mt2Kg?: number;
   mt2Totales?: number;
   Tiempo?: number;
   KgHora?: number;
-  Centro: number;
+  RepEje?: number;
+  AltoDis?: number;
+  Centro?: number;
+  PiezasRollo?: number;
 }
 
 export enum resultData {
@@ -36,12 +40,16 @@ export enum resultData {
   CantidadRollo,
   Metros,
   AltoRollo,
+  LargoRollo,
   Gramaje,
   mt2Kg,
   mt2Totales,
   Tiempo,
   KgHora,
   Centro,
+  RepEje,
+  AltoDis,
+  PiezasRollo,
 }
 
 export const EMPTY_WORK_CONFIG: IWorkConfig = {
@@ -54,12 +62,16 @@ export const EMPTY_WORK_CONFIG: IWorkConfig = {
   CantidadRollo: 0,
   Metros: 0,
   AltoRollo: 0,
+  LargoRollo: 0,
   Gramaje: 0,
   mt2Kg: 0,
   mt2Totales: 0,
   Tiempo: 0,
   KgHora: 0,
   Centro: 6,
+  RepEje: 1,
+  AltoDis: 1,
+  PiezasRollo: 0,
 };
 
 export interface IDataCalc {
@@ -103,6 +115,36 @@ export class WorkConfigService {
 
   WorkConfig() {
     return this.WorkConfigS.asObservable();
+  }
+
+  calculatePiezasRollo() {
+    const AltoDis = ccf.AltoDis === null ? 0 : ccf.AltoDis;
+    const RepEje = ccf.RepEje === null ? 1 : ccf.RepEje;
+
+    ccf.PiezasRollo = ccf.LargoRollo * (100 / AltoDis) * RepEje;
+  }
+
+  calculateAltoRollo_fromKg() {
+    this.calculateMetrosLineales();
+    const D = ccf.Centro * 25.4;
+    ccf.LargoRollo = Number.parseFloat(((ccf.CantidadRollo * 100000) / (ccf.Gramaje * ccf.Ancho)).toFixed(0));
+    ccf.AltoRollo = parseFloat((Math.sqrt((ccf.LargoRollo * ccf.Calibre) / Math.PI + Math.pow(D, 2) / 4) - D / 2).toFixed(1));
+    this.calculatePiezasRollo();
+  }
+  calculateAltoRollo_fromLargo() {
+    this.calculateMetrosLineales();
+    const D = ccf.Centro * 25.4;
+    ccf.CantidadRollo = parseFloat(((ccf.Gramaje * ccf.Ancho * ccf.LargoRollo) / 100000).toFixed(2));
+    ccf.AltoRollo = parseFloat((Math.sqrt((ccf.LargoRollo * ccf.Calibre) / Math.PI + Math.pow(D, 2) / 4) - D / 2).toFixed(1));
+    this.calculatePiezasRollo();
+  }
+
+  calculateAltoRollo_fromAlto() {
+    this.calculateMetrosLineales();
+    const D = ccf.Centro * 25.4;
+    ccf.LargoRollo = (Math.pow(ccf.AltoRollo + D / 2, 2) - Math.pow(D, 2) / 4) / (ccf.Calibre / Math.PI);
+    ccf.CantidadRollo = parseFloat(((ccf.Gramaje * ccf.Ancho * ccf.LargoRollo) / 100000).toFixed(2));
+    this.calculatePiezasRollo();
   }
 
   calculateMetrosLineales() {
@@ -233,6 +275,12 @@ export class WorkConfigService {
           unit: 'mm',
           value: CurrentWork.AltoRollo.toFixed(1),
         };
+      case resultData.LargoRollo:
+        return {
+          name: 'Largo Rollo',
+          unit: 'm',
+          value: CurrentWork.LargoRollo.toFixed(0),
+        };
       case resultData.Ancho:
         return {
           name: 'Ancho',
@@ -251,6 +299,24 @@ export class WorkConfigService {
           unit: 'in',
           value: CurrentWork.Centro.toFixed(0),
         };
+      case resultData.RepEje:
+        return {
+          name: 'Rep. Eje',
+          unit: '',
+          value: CurrentWork.RepEje.toFixed(0),
+        };
+      case resultData.AltoDis:
+        return {
+          name: 'Alto Diseño',
+          unit: ' cm',
+          value: CurrentWork.AltoDis.toFixed(2),
+        };
+      case resultData.PiezasRollo:
+        return {
+          name: 'Piezas',
+          unit: ' pzas',
+          value: CurrentWork.PiezasRollo.toFixed(0),
+        };
     }
   }
 
@@ -266,6 +332,16 @@ export class WorkConfigService {
     );
   }
 
+  shareCanvas(cv: HTMLCanvasElement) {
+    if (window.cordova) {
+      this.socialSharing.share(null, null, cv.toDataURL());
+    } else {
+      const image = new Image();
+      image.src = cv.toDataURL();
+      const w = window.open('');
+      w.document.write(image.outerHTML);
+    }
+  }
   shareResults(CurrentWork: IWorkConfig, inputVariable: resultData, outputVariable: resultData, extraData: resultData[] = []) {
     let render = ` 
     <div class="row" style="margin-bottom: 0px;">

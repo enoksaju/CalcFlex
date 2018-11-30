@@ -10,7 +10,34 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
-@import '../src/theme/materialize.scss';
+// @import '../src/theme/materialize.scss';
+
+/* Extra Colors */
+
+.ion-color-red {
+  --ion-color-base: #ff0000;
+  --ion-color-base-rgb: 255, 0, 0;
+  --ion-color-contrast: #ffffff;
+  --ion-color-contrast-rgb: 255, 255, 255;
+  --ion-color-shade: #cc0000;
+  --ion-color-tint: #ff5555;
+}
+.ion-color-green {
+  --ion-color-base: #00ff00;
+  --ion-color-base-rgb: 0, 255, 0;
+  --ion-color-contrast: #000;
+  --ion-color-contrast-rgb: 0, 0, 0;
+  --ion-color-shade: #00cc00;
+  --ion-color-tint: #55ff55;
+}
+.ion-color-blue{
+  --ion-color-base: #0000ff;
+  --ion-color-base-rgb: 0, 0, 255;
+  --ion-color-contrast: #fff;
+  --ion-color-contrast-rgb: 255, 255, 255;
+  --ion-color-shade: #0000cc;
+  --ion-color-tint: #5555cc;
+}
 
 /* FontAwesome Variables */
 

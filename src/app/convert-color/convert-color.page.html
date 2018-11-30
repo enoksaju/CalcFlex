@@ -1,0 +1,35 @@
+<ion-header>
+  <ion-toolbar color="primary">
+    <ion-buttons slot="start"> <ion-menu-button></ion-menu-button> </ion-buttons>
+    <ion-title> Convertir Color </ion-title>
+  </ion-toolbar>
+</ion-header>
+
+<ion-content padding>
+  <div fxLayout="column">
+    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px">
+      <div>
+        <ion-item>
+          <ion-label>Desde:</ion-label>
+          <ion-select [(ngModel)]="fromColorSpace" interface="popover">
+            <ion-select-option *ngFor="let sColor of colorSpaces" [value]="sColor">{{ colorSpacesTypes[sColor] }}</ion-select-option>
+          </ion-select>
+        </ion-item>
+      </div>
+    </div>
+    <div fxLayout="column">
+      <app-rgbsettings #rgbConverter *ngIf="colorSpacesTypes[fromColorSpace] == 'RGB'" [converters]="converters"></app-rgbsettings>
+      <ion-card fxLayoutAlign="center center" [style.background]="colorFromRgb()" padding>
+        <div fxLayout="column" fxLayoutGap="10px">
+          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.rgb.ToString() }} </span>
+          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.cmy.ToString() }} </span>
+          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.cmyk.ToString() }} </span>
+          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.lab.ToString() }} </span>
+          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.lch.ToString() }} </span>
+          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.xyz.ToString() }} </span>
+          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.hex.ToString() }} </span>
+        </div>
+      </ion-card>
+    </div>
+  </div>
+</ion-content>

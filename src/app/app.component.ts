@@ -25,9 +25,19 @@ export class AppComponent {
       srcIcon: 'assets/icons/ruler.svg',
     },
     {
-      title: 'Alto de Rollo',
+      title: 'Alto y Piezas por Rollo',
       url: '/altoRollo',
       srcIcon: 'assets/icons/toilet-paper.svg',
+    },
+    {
+      title: 'Convertir Color',
+      url: '/convertColor',
+      srcIcon: 'assets/icons/toilet-paper.svg',
+    },
+    {
+      title: 'ΔE(CMC)',
+      url: '/diferenciaColor',
+      icon: 'contrast',
     },
   ];
 
