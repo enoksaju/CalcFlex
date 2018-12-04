@@ -10,7 +10,14 @@
 @import '~@ionic/angular/css/text-transformation.css';
 @import '~@ionic/angular/css/flex-utils.css';
 
+// import url('https://fonts.googleapis.com/css?family=Roboto');
 // @import '../src/theme/materialize.scss';
+
+@import '~roboto-fontface/css/mixins.scss';
+@include roboto-font('roboto', 'Roboto', 'Light', 300, normal);
+@include roboto-font('roboto', 'Roboto', 'Regular', 400, normal);
+@include roboto-font('roboto', 'Roboto', 'Bold', 700, normal);
+
 
 /* Extra Colors */
 
@@ -30,7 +37,7 @@
   --ion-color-shade: #00cc00;
   --ion-color-tint: #55ff55;
 }
-.ion-color-blue{
+.ion-color-blue {
   --ion-color-base: #0000ff;
   --ion-color-base-rgb: 0, 0, 255;
   --ion-color-contrast: #fff;
