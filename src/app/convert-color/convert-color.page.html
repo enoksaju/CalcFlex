@@ -5,31 +5,40 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding>
-  <div fxLayout="column">
-    <div fxLayout="row" fxLayout.lt-sm="column" fxLayoutGap="10px">
-      <div>
-        <ion-item>
-          <ion-label>Desde:</ion-label>
-          <ion-select [(ngModel)]="fromColorSpace" interface="popover">
-            <ion-select-option *ngFor="let sColor of colorSpaces" [value]="sColor">{{ colorSpacesTypes[sColor] }}</ion-select-option>
-          </ion-select>
-        </ion-item>
-      </div>
-    </div>
+<ion-content padding-top>
+  <ion-fab vertical="top" edge horizontal="end" slot="fixed">
+    <ion-fab-button mini color="tertiary" (click)="share()"><ion-icon name="share"></ion-icon></ion-fab-button>
+  </ion-fab>
+  <ion-item>
+    <ion-label>Desde:</ion-label>
+    <ion-select [(ngModel)]="fromColorSpace" interface="popover" (ionChange)="changeSelected()">
+      <ion-select-option *ngFor="let sColor of colorSpaces" [value]="sColor">{{ colorSpacesTypes[sColor] }}</ion-select-option>
+    </ion-select>
+  </ion-item>
+  <app-rgbsettings #rgbConverter *ngIf="colorSpacesTypes[fromColorSpace] == 'RGB'" [converters]="converters" (colorChange)="colorChange($event)"></app-rgbsettings>
+  <app-labsettings #rgbConverter *ngIf="colorSpacesTypes[fromColorSpace] == 'LAB'" [converters]="converters" (colorChange)="colorChange($event)"></app-labsettings>
+
+  <ion-card>
+    <ion-card-header> <ion-card-title>Resultados</ion-card-title> </ion-card-header>
+    <ion-card-content> <canvas #canvasColorConverter id="canvasColorConverter" height="600" width="1000" style="height:100%; width:100%"></canvas> </ion-card-content>
+  </ion-card>
+
+  <!--
     <div fxLayout="column">
-      <app-rgbsettings #rgbConverter *ngIf="colorSpacesTypes[fromColorSpace] == 'RGB'" [converters]="converters"></app-rgbsettings>
-      <ion-card fxLayoutAlign="center center" [style.background]="colorFromRgb()" padding>
-        <div fxLayout="column" fxLayoutGap="10px">
-          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.rgb.ToString() }} </span>
-          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.cmy.ToString() }} </span>
-          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.cmyk.ToString() }} </span>
-          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.lab.ToString() }} </span>
-          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.lch.ToString() }} </span>
-          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.xyz.ToString() }} </span>
-          <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;"> {{ converters.hex.ToString() }} </span>
+      <ion-card padding>
+        <div [style.background]="colorFromRgb()" style="height: 100px; border-radius: 4px"></div>
+        <div fxLayoutAlign="center center">
+          <div fxLayout="column" fxLayoutGap="10px">
+            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">RGB: {{ converters.rgb.ToString() }} </span>
+            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">CMY: {{ converters.cmy.ToString() }} </span>
+            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">CMYK: {{ converters.cmyk.ToString() }} </span>
+            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">LAB: {{ converters.lab.ToString() }} </span>
+            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">LCH: {{ converters.lch.ToString() }} </span>
+            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">XYZ: {{ converters.xyz.ToString() }} </span>
+            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">HEX: {{ converters.hex.ToString() }} </span>
+          </div>
         </div>
       </ion-card>
     </div>
-  </div>
+  -->
 </ion-content>

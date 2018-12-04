@@ -170,10 +170,13 @@ abstract class ColorSpace implements IColorSpace {
   public To(color: ColorSpacesTypes): IColorSpace {
     const activeRow = CreateInstanceColorSpace(color);
 
+    if (activeRow.ColorSpaceName === this.ColorSpaceName) {
+      return this;
+    }
+
     if (activeRow === undefined) {
       throw new Error('El Espacio de Color al que se convertira es invalido');
     }
-
     activeRow.initialize(this.ToRgb());
     return activeRow;
   }
@@ -213,7 +216,7 @@ export class Cmy extends ColorSpace implements ICmy {
   }
 
   ToString(): string {
-    return `C: ${this.C.toFixed(2)} M: ${this.M.toFixed(2)} Y: ${this.Y.toFixed(2)}`;
+    return `C: ${this.C.toFixed(0)} M: ${this.M.toFixed(0)} Y: ${this.Y.toFixed(0)}`;
   }
 }
 
@@ -231,7 +234,7 @@ class CmyConverter {
 
 // #region cmyk
 export function BasicallyEqualTo(a: number, b: number) {
-  return Math.abs(this - b) <= DefaultPrecision;
+  return Math.abs(a - b) <= DefaultPrecision;
 }
 
 interface ICmyk extends IColorSpace {
@@ -511,7 +514,7 @@ export class Lch extends ColorSpace implements ILch {
   }
 
   ToString(): string {
-    return `L: ${this.L.toFixed(2)} C: ${this.C.toFixed(2)} H: ${this.H.toFixed(2)}`;
+    return `L: ${this.L.toFixed(1)} C: ${this.C.toFixed(1)} H: ${this.H.toFixed(0)}`;
   }
 }
 

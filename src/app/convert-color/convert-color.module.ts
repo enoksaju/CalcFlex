@@ -8,6 +8,7 @@ import { IonicModule } from '@ionic/angular';
 import { ConvertColorPage } from './convert-color.page';
 import { RgbsettingsComponent } from './rgbsettings/rgbsettings.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
+import { LabsettingsComponent } from './labsettings/labsettings.component';
 
 const routes: Routes = [
   {
@@ -18,6 +19,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [CommonModule, FormsModule, FlexLayoutModule, IonicModule, RouterModule.forChild(routes)],
-  declarations: [ConvertColorPage, RgbsettingsComponent],
+  declarations: [ConvertColorPage, RgbsettingsComponent, LabsettingsComponent],
 })
 export class ConvertColorPageModule {}
