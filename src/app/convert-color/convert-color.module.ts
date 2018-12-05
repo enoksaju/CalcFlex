@@ -9,6 +9,11 @@ import { ConvertColorPage } from './convert-color.page';
 import { RgbsettingsComponent } from './rgbsettings/rgbsettings.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
 import { LabsettingsComponent } from './labsettings/labsettings.component';
+import { CmysettingsComponent } from './cmysettings/cmysettings.component';
+import { CmyksettingsComponent } from './cmyksettings/cmyksettings.component';
+import { LchsettingsComponent } from './lchsettings/lchsettings.component';
+import { XyzsettingsComponent } from './xyzsettings/xyzsettings.component';
+import { HexsettingsComponent } from './hexsettings/hexsettings.component';
 
 const routes: Routes = [
   {
@@ -19,6 +24,6 @@ const routes: Routes = [
 
 @NgModule({
   imports: [CommonModule, FormsModule, FlexLayoutModule, IonicModule, RouterModule.forChild(routes)],
-  declarations: [ConvertColorPage, RgbsettingsComponent, LabsettingsComponent],
+  declarations: [ConvertColorPage, RgbsettingsComponent, LabsettingsComponent, CmysettingsComponent, CmyksettingsComponent, LchsettingsComponent, XyzsettingsComponent, HexsettingsComponent],
 })
 export class ConvertColorPageModule {}

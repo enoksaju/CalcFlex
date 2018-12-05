@@ -12,33 +12,65 @@
   <ion-item>
     <ion-label>Desde:</ion-label>
     <ion-select [(ngModel)]="fromColorSpace" interface="popover" (ionChange)="changeSelected()">
-      <ion-select-option *ngFor="let sColor of colorSpaces" [value]="sColor">{{ colorSpacesTypes[sColor] }}</ion-select-option>
+      <ion-select-option *ngFor="let sColor of colorSpaces" [value]="sColor">{{
+        colorSpacesTypes[sColor]
+      }}</ion-select-option>
     </ion-select>
   </ion-item>
-  <app-rgbsettings #rgbConverter *ngIf="colorSpacesTypes[fromColorSpace] == 'RGB'" [converters]="converters" (colorChange)="colorChange($event)"></app-rgbsettings>
-  <app-labsettings #rgbConverter *ngIf="colorSpacesTypes[fromColorSpace] == 'LAB'" [converters]="converters" (colorChange)="colorChange($event)"></app-labsettings>
+
+  <app-rgbsettings
+    #rgbConverter
+    *ngIf="colorSpacesTypes[fromColorSpace] == 'RGB'"
+    [converters]="converters"
+    (colorChange)="colorChange($event)"
+  ></app-rgbsettings>
+  <app-labsettings
+    #rgbConverter
+    *ngIf="colorSpacesTypes[fromColorSpace] == 'LAB'"
+    [converters]="converters"
+    (colorChange)="colorChange($event)"
+  ></app-labsettings>
+  <app-cmysettings
+    #rgbConverter
+    *ngIf="colorSpacesTypes[fromColorSpace] == 'CMY'"
+    [converters]="converters"
+    (colorChange)="colorChange($event)"
+  ></app-cmysettings>
+  <app-cmyksettings
+    #rgbConverter
+    *ngIf="colorSpacesTypes[fromColorSpace] == 'CMYK'"
+    [converters]="converters"
+    (colorChange)="colorChange($event)"
+  ></app-cmyksettings>
+  <app-hexsettings
+    #rgbConverter
+    *ngIf="colorSpacesTypes[fromColorSpace] == 'HEX'"
+    [converters]="converters"
+    (colorChange)="colorChange($event)"
+  ></app-hexsettings>
+  <app-lchsettings
+    #rgbConverter
+    *ngIf="colorSpacesTypes[fromColorSpace] == 'LCH'"
+    [converters]="converters"
+    (colorChange)="colorChange($event)"
+  ></app-lchsettings>
+  <app-xyzsettings
+    #rgbConverter
+    *ngIf="colorSpacesTypes[fromColorSpace] == 'XYZ'"
+    [converters]="converters"
+    (colorChange)="colorChange($event)"
+  ></app-xyzsettings>
 
   <ion-card>
     <ion-card-header> <ion-card-title>Resultados</ion-card-title> </ion-card-header>
-    <ion-card-content> <canvas #canvasColorConverter id="canvasColorConverter" height="600" width="1000" style="height:100%; width:100%"></canvas> </ion-card-content>
+    <ion-card-content>
+      <canvas
+        #canvasColorConverter
+        id="canvasColorConverter"
+        height="600"
+        width="1000"
+        style="height:100%; width:100%"
+      ></canvas>
+    </ion-card-content>
   </ion-card>
-
-  <!--
-    <div fxLayout="column">
-      <ion-card padding>
-        <div [style.background]="colorFromRgb()" style="height: 100px; border-radius: 4px"></div>
-        <div fxLayoutAlign="center center">
-          <div fxLayout="column" fxLayoutGap="10px">
-            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">RGB: {{ converters.rgb.ToString() }} </span>
-            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">CMY: {{ converters.cmy.ToString() }} </span>
-            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">CMYK: {{ converters.cmyk.ToString() }} </span>
-            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">LAB: {{ converters.lab.ToString() }} </span>
-            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">LCH: {{ converters.lch.ToString() }} </span>
-            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">XYZ: {{ converters.xyz.ToString() }} </span>
-            <span style="background: rgba(255,255,255,0.3); color:black; padding: 5px; border-radius: 5px;">HEX: {{ converters.hex.ToString() }} </span>
-          </div>
-        </div>
-      </ion-card>
-    </div>
-  -->
 </ion-content>

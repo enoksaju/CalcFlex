@@ -9,10 +9,9 @@ import { Rgb, ColorSpacesTypes, Hex, IConverters, Cmy, Cmyk, Lab, Lch, Xyz, ICol
 export class RgbsettingsComponent implements OnInit {
   @Input() converters: IConverters;
   @Output() colorChange = new EventEmitter<IColorSpace>();
-
-  constructor() {}
-  ngOnInit() {}
   change() {
     this.colorChange.emit(this.converters.rgb);
   }
+  constructor() {}
+  ngOnInit() {}
 }
