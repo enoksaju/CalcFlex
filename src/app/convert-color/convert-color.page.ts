@@ -1,7 +1,8 @@
-import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
+import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ColorSpacesTypes, Rgb, Lab, Xyz, Cmy, Cmyk, Lch, Hex, IConverters, IColorSpace } from '../color-library/color-space';
-import { RgbsettingsComponent } from './rgbsettings/rgbsettings.component';
 import { WorkConfigService } from '../work-config.service';
+import { RgbsettingsComponent } from './settings/rgbsettings.component';
+import { Storage } from '@ionic/storage';
 
 const TRASPARENTE_RGBA = 'rgba(0,0,0,0)';
 const NORMAL = 'normal 24px Roboto';
@@ -16,14 +17,13 @@ const CONCTENT_COLOR = 'rgba(0, 0, 0,0.7)';
   templateUrl: './convert-color.page.html',
   styleUrls: ['./convert-color.page.scss'],
 })
-export class ConvertColorPage implements OnInit {
+export class ConvertColorPage implements OnInit, OnDestroy {
   @ViewChild('rgbConverter') rgbC: RgbsettingsComponent;
   @ViewChild('canvasColorConverter') public canvas: ElementRef;
 
   converters: IConverters = {
     rgb: new Rgb().initialize({ R: 0, G: 0, B: 0 }),
     lab: new Lab().initialize({ R: 0, G: 0, B: 0 }),
-    xyz: new Xyz().initialize({ R: 0, G: 0, B: 0 }),
     cmy: new Cmy().initialize({ R: 0, G: 0, B: 0 }),
     cmyk: new Cmyk().initialize({ R: 0, G: 0, B: 0 }),
     lch: new Lch().initialize({ R: 0, G: 0, B: 0 }),
@@ -34,11 +34,18 @@ export class ConvertColorPage implements OnInit {
   colorSpaces = Object.keys(ColorSpacesTypes).filter(f => !isNaN(Number(f)));
 
   fromColorSpace_color: IColorSpace = this.converters.rgb;
-
   fromColorSpace = '0';
-  constructor(public workConfigService: WorkConfigService) {}
+
+  constructor(public workConfigService: WorkConfigService, private storage: Storage) {}
   ngOnInit() {
     this.drawCanvas();
+
+    this.storage.get('convS').then(s => {
+      this.fromColorSpace = s ? s : '0';
+    });
+  }
+  ngOnDestroy(): void {
+    this.storage.set('convS', this.fromColorSpace);
   }
 
   colorFromRgb(): string {
@@ -48,6 +55,7 @@ export class ConvertColorPage implements OnInit {
 
   changeSelected() {
     this.colorChange(this.converters[this.colorSpacesTypes[this.fromColorSpace].toLowerCase()]);
+    this.storage.set('convS', this.fromColorSpace);
   }
   colorChange(colorSpace: IColorSpace) {
     this.fromColorSpace_color = colorSpace;
@@ -57,7 +65,6 @@ export class ConvertColorPage implements OnInit {
     this.converters.lab = colorSpace.To(ColorSpacesTypes.LAB) as Lab;
     this.converters.lch = colorSpace.To(ColorSpacesTypes.LCH) as Lch;
     this.converters.rgb = colorSpace.To(ColorSpacesTypes.RGB) as Rgb;
-    this.converters.xyz = colorSpace.To(ColorSpacesTypes.XYZ) as Xyz;
     this.drawCanvas();
   }
 
@@ -121,7 +128,7 @@ export class ConvertColorPage implements OnInit {
     cx.font = NORMAL_COLOR;
     cx.fillText(this.fromColorSpace_color.ToString(), 280 - cx.measureText(this.fromColorSpace_color.ToString()).width / 2, 455);
 
-    this.writeResults([this.converters.rgb, this.converters.cmy, this.converters.cmyk, this.converters.hex, this.converters.lab, this.converters.lch, this.converters.xyz], cx);
+    this.writeResults([this.converters.rgb, this.converters.cmy, this.converters.cmyk, this.converters.hex, this.converters.lab, this.converters.lch], cx);
   }
 
   private clearCanvas(canvasEl: HTMLCanvasElement) {

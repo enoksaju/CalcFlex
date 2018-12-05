@@ -14,10 +14,11 @@
 // @import '../src/theme/materialize.scss';
 
 @import '~roboto-fontface/css/mixins.scss';
+$roboto-font-path: '~roboto-fontface/fonts';
+
 @include roboto-font('roboto', 'Roboto', 'Light', 300, normal);
 @include roboto-font('roboto', 'Roboto', 'Regular', 400, normal);
 @include roboto-font('roboto', 'Roboto', 'Bold', 700, normal);
-
 
 /* Extra Colors */
 
@@ -27,7 +28,7 @@
   --ion-color-contrast: #ffffff;
   --ion-color-contrast-rgb: 255, 255, 255;
   --ion-color-shade: #cc0000;
-  --ion-color-tint: #ff5555;
+  --ion-color-tint: #f55;
 }
 .ion-color-green {
   --ion-color-base: #00ff00;
@@ -35,7 +36,7 @@
   --ion-color-contrast: #000;
   --ion-color-contrast-rgb: 0, 0, 0;
   --ion-color-shade: #00cc00;
-  --ion-color-tint: #55ff55;
+  --ion-color-tint: #5f5;
 }
 .ion-color-blue {
   --ion-color-base: #0000ff;
@@ -43,7 +44,32 @@
   --ion-color-contrast: #fff;
   --ion-color-contrast-rgb: 255, 255, 255;
   --ion-color-shade: #0000cc;
-  --ion-color-tint: #5555cc;
+  --ion-color-tint: #55f;
+}
+
+.ion-color-cyan {
+  --ion-color-base: #00ffff;
+  --ion-color-base-rgb: 0, 255, 255;
+  --ion-color-contrast: #fff;
+  --ion-color-contrast-rgb: 255, 255, 255;
+  --ion-color-shade: #00cccc;
+  --ion-color-tint: #5ff;
+}
+.ion-color-magent {
+  --ion-color-base: #ff00ff;
+  --ion-color-base-rgb: 255, 0, 255;
+  --ion-color-contrast: #fff;
+  --ion-color-contrast-rgb: 255, 255, 255;
+  --ion-color-shade: #c0c;
+  --ion-color-tint: #f5f;
+}
+.ion-color-yellow {
+  --ion-color-base: #fd0;
+  --ion-color-base-rgb: 255, 221, 0;
+  --ion-color-contrast: #000;
+  --ion-color-contrast-rgb: 0, 0, 0;
+  --ion-color-shade: #cb0;
+  --ion-color-tint: #ec5;
 }
 
 /* FontAwesome Variables */

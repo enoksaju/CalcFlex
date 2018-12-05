@@ -54,12 +54,6 @@
     [converters]="converters"
     (colorChange)="colorChange($event)"
   ></app-lchsettings>
-  <app-xyzsettings
-    #rgbConverter
-    *ngIf="colorSpacesTypes[fromColorSpace] == 'XYZ'"
-    [converters]="converters"
-    (colorChange)="colorChange($event)"
-  ></app-xyzsettings>
 
   <ion-card>
     <ion-card-header> <ion-card-title>Resultados</ion-card-title> </ion-card-header>

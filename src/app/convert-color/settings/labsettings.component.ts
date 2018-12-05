@@ -1,3 +1,10 @@
+import { Component, OnInit, Output, Input, EventEmitter } from '@angular/core';
+
+import { IConverters, IColorSpace } from '../../color-library/color-space';
+
+@Component({
+  selector: 'app-labsettings',
+  template: `
 <ion-item>
   <div slot="start" style="width: 15px; margin: 0px;">L</div>
   <ion-range [(ngModel)]="converters.lab.L" min="0" max="100" step="0.5" (ionChange)="change()">
@@ -22,3 +29,17 @@
   </ion-range>
   <div slot="end" style="width: 60px; margin: 0px;" (click)="converters.lab.B = 0">{{ (converters.lab.B ? converters.lab.B : 0) | number: '1.2-2' }}</div>
 </ion-item>
+`,
+  styles: [''],
+})
+export class LabsettingsComponent implements OnInit {
+  @Input() converters: IConverters;
+  @Output() colorChange = new EventEmitter<IColorSpace>();
+
+  constructor() {}
+
+  ngOnInit() {}
+  change() {
+    this.colorChange.emit(this.converters.lab);
+  }
+}

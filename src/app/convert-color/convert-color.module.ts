@@ -6,14 +6,14 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { ConvertColorPage } from './convert-color.page';
-import { RgbsettingsComponent } from './rgbsettings/rgbsettings.component';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LabsettingsComponent } from './labsettings/labsettings.component';
-import { CmysettingsComponent } from './cmysettings/cmysettings.component';
-import { CmyksettingsComponent } from './cmyksettings/cmyksettings.component';
-import { LchsettingsComponent } from './lchsettings/lchsettings.component';
-import { XyzsettingsComponent } from './xyzsettings/xyzsettings.component';
-import { HexsettingsComponent } from './hexsettings/hexsettings.component';
+import { LabsettingsComponent } from './settings/labsettings.component';
+import { RgbsettingsComponent } from './settings/rgbsettings.component';
+import { CmyksettingsComponent } from './settings/cmyksettings.component';
+import { CmysettingsComponent } from './settings/cmysettings.component';
+import { LchsettingsComponent } from './settings/lchsettings.component';
+import { HexsettingsComponent } from './settings/hexsettings.component';
+import { IonicStorageModule } from '@ionic/storage';
 
 const routes: Routes = [
   {
@@ -23,7 +23,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, FlexLayoutModule, IonicModule, RouterModule.forChild(routes)],
-  declarations: [ConvertColorPage, RgbsettingsComponent, LabsettingsComponent, CmysettingsComponent, CmyksettingsComponent, LchsettingsComponent, XyzsettingsComponent, HexsettingsComponent],
+  imports: [CommonModule, FormsModule, FlexLayoutModule, IonicModule, IonicStorageModule.forRoot(), RouterModule.forChild(routes)],
+  declarations: [ConvertColorPage, RgbsettingsComponent, LabsettingsComponent, CmysettingsComponent, CmyksettingsComponent, LchsettingsComponent, HexsettingsComponent],
 })
 export class ConvertColorPageModule {}

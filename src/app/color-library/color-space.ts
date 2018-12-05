@@ -11,12 +11,10 @@ export enum ColorSpacesTypes {
   CMY,
   CMYK,
   LCH,
-  XYZ,
 }
 export interface IConverters {
   rgb: Rgb;
   lab: Lab;
-  xyz: Xyz;
   cmy: Cmy;
   cmyk: Cmyk;
   lch: Lch;
@@ -95,8 +93,6 @@ export function CreateInstanceColorSpace(
       return Cmyk.create(settings.CMYK);
     case ColorSpacesTypes.LCH:
       return Lch.create(settings.Lch);
-    case ColorSpacesTypes.XYZ:
-      return Xyz.create(settings.Xyz);
   }
 }
 
@@ -216,7 +212,7 @@ export class Cmy extends ColorSpace implements ICmy {
   }
 
   ToString(): string {
-    return `C: ${this.C.toFixed(0)} M: ${this.M.toFixed(0)} Y: ${this.Y.toFixed(0)}`;
+    return `C: ${(this.C * 100).toFixed(0)}% M: ${(this.M * 100).toFixed(0)}% Y: ${(this.Y * 100).toFixed(0)}%`;
   }
 }
 
@@ -267,7 +263,7 @@ export class Cmyk extends ColorSpace implements ICmyk {
   }
 
   ToString(): string {
-    return `C: ${this.C.toFixed(2)} M: ${this.M.toFixed(2)} Y: ${this.Y.toFixed(2)} K: ${this.K.toFixed(2)}`;
+    return `C: ${(this.C * 100).toFixed(0)}% M: ${(this.M * 100).toFixed(0)}% Y: ${(this.Y * 100).toFixed(0)}% K: ${(this.K * 100).toFixed(0)}%`;
   }
 }
 
@@ -354,27 +350,29 @@ export class Hex extends ColorSpace implements IHex {
   }
 
   private SetCode(value: string) {
-    const regex1 = /^#{0,1}([0-9A-Fa-f]{1})([0-9A-Fa-f]{1})([0-9A-Fa-f]{1})$/g;
-    let m = regex1.exec(value);
+    // const regex1 = /^#{0,1}([0-9A-Fa-f]{1})([0-9A-Fa-f]{1})([0-9A-Fa-f]{1})$/g;
+    // let m = regex1.exec(value);
 
-    if (regex1.test(value)) {
-      this.R = `${m[1]}${m[1]}`; // string.Format("{0}{0}", gp[1]);
-      this.G = `${m[2]}${m[2]}`; // string.Format("{0}{0}", gp[2]);
-      this.B = `${m[2]}${m[2]}`; // string.Format("{0}{0}", gp[3]);
-      return;
-    }
+    // if (m && m.length > 3) {
+    //   this.R = `${m[1]}${m[1]}`; // string.Format("{0}{0}", gp[1]);
+    //   this.G = `${m[2]}${m[2]}`; // string.Format("{0}{0}", gp[2]);
+    //   this.B = `${m[3]}${m[3]}`; // string.Format("{0}{0}", gp[3]);
+    //   return;
+    // }
 
-    const regex2 = /^#{0,1}([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/g;
+    const regex = /^#{0,1}([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})([0-9A-Fa-f]{2})$/g;
+    const m = regex.exec(value);
 
-    m = regex2.exec(value);
-    if (regex2.test(value)) {
+    if (m && m.length > 3) {
       this.R = m[1];
       this.G = m[2];
       this.B = m[3];
       return;
     }
 
-    throw new Error('Error de Formato');
+    // this.R = '00';
+    // this.G = '00';
+    // this.B = '00';
   }
 
   constructor(code: string = null) {
