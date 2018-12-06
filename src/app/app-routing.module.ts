@@ -14,6 +14,7 @@ const routes: Routes = [
   { path: 'ml', loadChildren: './metros-lineales/metros-lineales.module#MetrosLinealesPageModule' },
   { path: 'altoRollo', loadChildren: './alto-rollo/alto-rollo.module#AltoRolloPageModule' }, 
   { path: 'convertColor', loadChildren: './convert-color/convert-color.module#ConvertColorPageModule' },
+  { path: 'diferenciaColor', loadChildren: './diferencia-color/diferencia-color.module#DiferenciaColorPageModule' },
 ];
 
 @NgModule({

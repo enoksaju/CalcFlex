@@ -1,5 +1,5 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
-import { ColorSpacesTypes, Rgb, Lab, Xyz, Cmy, Cmyk, Lch, Hex, IConverters, IColorSpace } from '../color-library/color-space';
+import { ColorSpacesTypes, Rgb, Lab, Xyz, Cmy, Cmyk, Lch, Hex, IConverters, IColorSpace, ConverterComparer } from '../color-library/color-space';
 import { WorkConfigService } from '../work-config.service';
 import { RgbsettingsComponent } from './settings/rgbsettings.component';
 import { Storage } from '@ionic/storage';
@@ -18,17 +18,9 @@ const CONCTENT_COLOR = 'rgba(0, 0, 0,0.7)';
   styleUrls: ['./convert-color.page.scss'],
 })
 export class ConvertColorPage implements OnInit, OnDestroy {
-  @ViewChild('rgbConverter') rgbC: RgbsettingsComponent;
   @ViewChild('canvasColorConverter') public canvas: ElementRef;
 
-  converters: IConverters = {
-    rgb: new Rgb().initialize({ R: 0, G: 0, B: 0 }),
-    lab: new Lab().initialize({ R: 0, G: 0, B: 0 }),
-    cmy: new Cmy().initialize({ R: 0, G: 0, B: 0 }),
-    cmyk: new Cmyk().initialize({ R: 0, G: 0, B: 0 }),
-    lch: new Lch().initialize({ R: 0, G: 0, B: 0 }),
-    hex: new Hex().initialize({ R: 0, G: 0, B: 0 }),
-  };
+  converters = new ConverterComparer();
 
   colorSpacesTypes = ColorSpacesTypes;
   colorSpaces = Object.keys(ColorSpacesTypes).filter(f => !isNaN(Number(f)));
@@ -38,12 +30,16 @@ export class ConvertColorPage implements OnInit, OnDestroy {
 
   constructor(public workConfigService: WorkConfigService, private storage: Storage) {}
   ngOnInit() {
-    this.drawCanvas();
-
-    this.storage.get('convS').then(s => {
-      this.fromColorSpace = s ? s : '0';
-    });
+    this.loadSettings();
   }
+
+  async loadSettings() {
+    this.converters = new ConverterComparer(await this.storage.get('color'));
+    const s = await this.storage.get('convS');
+    this.fromColorSpace = s ? s : '0';
+    this.drawCanvas();
+  }
+
   ngOnDestroy(): void {
     this.storage.set('convS', this.fromColorSpace);
   }
@@ -59,12 +55,10 @@ export class ConvertColorPage implements OnInit, OnDestroy {
   }
   colorChange(colorSpace: IColorSpace) {
     this.fromColorSpace_color = colorSpace;
-    this.converters.cmy = colorSpace.To(ColorSpacesTypes.CMY) as Cmy;
-    this.converters.cmyk = colorSpace.To(ColorSpacesTypes.CMYK) as Cmyk;
-    this.converters.hex = colorSpace.To(ColorSpacesTypes.HEX) as Hex;
-    this.converters.lab = colorSpace.To(ColorSpacesTypes.LAB) as Lab;
-    this.converters.lch = colorSpace.To(ColorSpacesTypes.LCH) as Lch;
-    this.converters.rgb = colorSpace.To(ColorSpacesTypes.RGB) as Rgb;
+    this.converters.updateFromColor(colorSpace);
+    const rgb = colorSpace.ToRgb();
+
+    this.storage.set('color', { R: rgb.R, G: rgb.G, B: rgb.B });
     this.drawCanvas();
   }
 

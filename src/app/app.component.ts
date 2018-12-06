@@ -32,10 +32,10 @@ export class AppComponent {
     {
       title: 'Convertir Color',
       url: '/convertColor',
-      srcIcon: 'assets/icons/toilet-paper.svg',
+      icon: 'color-palette',
     },
     {
-      title: 'ΔE(CMC)',
+      title: 'Diferencia de Color',
       url: '/diferenciaColor',
       icon: 'contrast',
     },

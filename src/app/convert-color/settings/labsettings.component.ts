@@ -15,7 +15,7 @@ import { IConverters, IColorSpace } from '../../color-library/color-space';
 </ion-item>
 <ion-item>
   <div slot="start" style="width: 15px; margin: 0px;">A</div>
-  <ion-range [(ngModel)]="converters.lab.A" min="-128" max="128" step="0.5" (ionChange)="change()">
+  <ion-range [(ngModel)]="converters.lab.A" min="-100" max="100" step="0.5" (ionChange)="change()">
     <ion-icon style="margin-right:8px; color:green;" slot="start" name="square"></ion-icon>
     <ion-icon style="margin-left:8px; color:red" slot="end" name="square"></ion-icon>
   </ion-range>
@@ -23,7 +23,7 @@ import { IConverters, IColorSpace } from '../../color-library/color-space';
 </ion-item>
 <ion-item>
   <div slot="start" style="width: 15px; margin: 0px;">B</div>
-  <ion-range [(ngModel)]="converters.lab.B" min="-128" max="128" step="0.5" (ionChange)="change()">
+  <ion-range [(ngModel)]="converters.lab.B" min="-100" max="100" step="0.5" (ionChange)="change()">
     <ion-icon style="margin-right:8px; color:blue" slot="start" name="square"></ion-icon>
     <ion-icon style="margin-left:8px; color:yellow" slot="end" name="square"></ion-icon>
   </ion-range>

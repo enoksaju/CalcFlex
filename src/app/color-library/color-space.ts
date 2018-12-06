@@ -21,6 +21,30 @@ export interface IConverters {
   hex: Hex;
 }
 
+export class ConverterComparer implements IConverters {
+  rgb: Rgb;
+  lab: Lab;
+  cmy: Cmy;
+  cmyk: Cmyk;
+  lch: Lch;
+  hex: Hex;
+
+  constructor(options?: { R?: number; G?: number; B?: number }) {
+    const settings = Object.assign({ R: 0, G: 0, B: 0 }, options);
+    this.rgb = new Rgb().initialize(settings);
+    this.updateFromColor(this.rgb);
+  }
+
+  updateFromColor(colorSpace: IColorSpace) {
+    this.cmy = colorSpace.To(ColorSpacesTypes.CMY) as Cmy;
+    this.cmyk = colorSpace.To(ColorSpacesTypes.CMYK) as Cmyk;
+    this.hex = colorSpace.To(ColorSpacesTypes.HEX) as Hex;
+    this.lab = colorSpace.To(ColorSpacesTypes.LAB) as Lab;
+    this.lch = colorSpace.To(ColorSpacesTypes.LCH) as Lch;
+    this.rgb = colorSpace.To(ColorSpacesTypes.RGB) as Rgb;
+  }
+}
+
 //#region unexported Functions
 
 function RoundAwayFromZero(startValue, digits): number {
@@ -100,8 +124,77 @@ export function CreateInstanceColorSpace(
 
 // #region ColorSpace
 interface IColorSpaceComparison {
-  Compare(a: IColorSpace, b: IColorSpace): number;
+  Compare(a: IColorSpace, b: IColorSpace): this;
+  ToString(): string;
+  ToValue(): number;
 }
+
+export class CmcComparison implements IColorSpaceComparison {
+  public static DefaultLightness = 2.0;
+  public static DefaultChroma = 1.0;
+
+  private readonly _lightness: number;
+  private readonly _chroma: number;
+
+  deltaL: number;
+  deltaA: number;
+  deltaB: number;
+  deltaCMC: number;
+
+  public static DistanceDivided(a: number, dividend: number): number {
+    const adiv = a / dividend;
+    return adiv * adiv;
+  }
+
+  constructor(options?: { lightness?: number; chroma?: number }) {
+    const defaultSettings = { lightness: CmcComparison.DefaultLightness, chroma: CmcComparison.DefaultChroma };
+    const settings = Object.assign(defaultSettings, options);
+
+    this._lightness = settings.lightness;
+    this._chroma = settings.chroma;
+  }
+
+  Compare(a: IColorSpace, b: IColorSpace): this {
+    const aLab = a.To(ColorSpacesTypes.LAB) as Lab;
+    const bLab = b.To(ColorSpacesTypes.LAB) as Lab;
+
+    this.deltaL = aLab.L - bLab.L;
+    this.deltaA = aLab.A - bLab.A;
+    this.deltaB = aLab.B - bLab.B;
+
+    const h = Math.atan2(aLab.B, aLab.A);
+
+    const c1 = Math.sqrt(aLab.A * aLab.A + aLab.B * aLab.B);
+    const c2 = Math.sqrt(bLab.A * bLab.A + bLab.B * bLab.B);
+
+    const deltaC = c1 - c2;
+    const deltaH = Math.sqrt((aLab.A - bLab.A) * (aLab.A - bLab.A) + (aLab.B - bLab.B) * (aLab.B - bLab.B) - deltaC * deltaC);
+
+    let c1_4 = c1 * c1;
+    c1_4 *= c1_4;
+    const t = 164 <= h && h <= 345 ? 0.56 + Math.abs(0.2 * Math.cos(h + 168.0)) : 0.36 + Math.abs(0.4 * Math.cos(h + 35.0));
+
+    const f = Math.sqrt(c1_4 / (c1_4 + 1900.0));
+
+    const sL = aLab.L < 16 ? 0.511 : (0.040975 * aLab.L) / (1.0 + 0.01765 * aLab.L);
+    const sC = (0.0638 * c1) / (1 + 0.0131 * c1) + 0.638;
+    const sH = sC * (f * t + 1 - f);
+
+    const differences = CmcComparison.DistanceDivided(this.deltaL, this._lightness * sL) + CmcComparison.DistanceDivided(deltaC, this._chroma * sC) + CmcComparison.DistanceDivided(deltaH, sH);
+
+    this.deltaCMC = Math.sqrt(differences);
+    return this; // .deltaCMC;
+  }
+
+  ToValue(): number {
+    return this.deltaCMC;
+  }
+
+  ToString(): string {
+    return `&Delta;CMC: ${this.ToValue().toFixed(2)} <br/> &Delta;L: ${this.deltaL.toFixed(2)} &Delta;A: ${this.deltaA.toFixed(2)} &Delta;B: ${this.deltaB.toFixed(2)}`;
+  }
+}
+
 /*
 public delegate double ComparisonAlgorithm(IColorSpace a, IColorSpace b);
 */
@@ -133,7 +226,7 @@ export interface IColorSpace {
    * @param compareToValue Otro IColorSpace para comparar
    * @param comparer Algoritmo a usar para la comparación
    */
-  Compare?(compareToValue: IColorSpace, comparer: IColorSpaceComparison): number;
+  Compare?<T extends IColorSpaceComparison>(compareToValue: IColorSpace, comparer: T): T;
 
   ToString?(): string;
 }
@@ -154,7 +247,7 @@ abstract class ColorSpace implements IColorSpace {
    * @param comparer
    * @returns  Devuelve un valor numerico unico que representa la diferencia entre dos colores
    */
-  public Compare(compareToValue: IColorSpace, comparer: IColorSpaceComparison): number {
+  public Compare<T extends IColorSpaceComparison>(compareToValue: IColorSpace, comparer: T): T {
     return comparer.Compare(this, compareToValue);
   }
 
