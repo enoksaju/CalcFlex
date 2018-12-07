@@ -20,6 +20,8 @@ const CONCTENT_COLOR = 'rgba(0, 0, 0,0.7)';
 export class ConvertColorPage implements OnInit, OnDestroy {
   @ViewChild('canvasColorConverter') public canvas: ElementRef;
 
+  numeric1: boolean;
+
   converters = new ConverterComparer();
 
   colorSpacesTypes = ColorSpacesTypes;
@@ -33,10 +35,18 @@ export class ConvertColorPage implements OnInit, OnDestroy {
     this.loadSettings();
   }
 
+  changeChecked(name: string, value: any) {
+    this.storage.set(name, value);
+  }
+
   async loadSettings() {
     this.converters = new ConverterComparer(await this.storage.get('color'));
     const s = await this.storage.get('convS');
     this.fromColorSpace = s ? s : '0';
+
+    const n1 = (await this.storage.get('numeric1DC')) as boolean;
+    this.numeric1 = n1;
+
     this.drawCanvas();
   }
 

@@ -9,62 +9,28 @@
   <ion-fab vertical="top" edge horizontal="end" slot="fixed">
     <ion-fab-button mini color="tertiary" (click)="share()"><ion-icon name="share"></ion-icon></ion-fab-button>
   </ion-fab>
+
+  <ion-item>
+    <ion-label> Usar valores numericos</ion-label>
+    <ion-checkbox slot="start" [checked]="numeric1" [(ngModel)]="numeric1" (ionChange)="changeChecked('numeric1DC', numeric1)"></ion-checkbox>
+  </ion-item>
+
   <ion-item>
     <ion-label>Desde:</ion-label>
     <ion-select [(ngModel)]="fromColorSpace" interface="popover" (ionChange)="changeSelected()">
-      <ion-select-option *ngFor="let sColor of colorSpaces" [value]="sColor">{{
-        colorSpacesTypes[sColor]
-      }}</ion-select-option>
+      <ion-select-option *ngFor="let sColor of colorSpaces" [value]="sColor">{{ colorSpacesTypes[sColor] }}</ion-select-option>
     </ion-select>
   </ion-item>
 
-  <app-rgbsettings
-    #rgbConverter
-    *ngIf="colorSpacesTypes[fromColorSpace] == 'RGB'"
-    [converters]="converters"
-    (colorChange)="colorChange($event)"
-  ></app-rgbsettings>
-  <app-labsettings
-    #rgbConverter
-    *ngIf="colorSpacesTypes[fromColorSpace] == 'LAB'"
-    [converters]="converters"
-    (colorChange)="colorChange($event)"
-  ></app-labsettings>
-  <app-cmysettings
-    #rgbConverter
-    *ngIf="colorSpacesTypes[fromColorSpace] == 'CMY'"
-    [converters]="converters"
-    (colorChange)="colorChange($event)"
-  ></app-cmysettings>
-  <app-cmyksettings
-    #rgbConverter
-    *ngIf="colorSpacesTypes[fromColorSpace] == 'CMYK'"
-    [converters]="converters"
-    (colorChange)="colorChange($event)"
-  ></app-cmyksettings>
-  <app-hexsettings
-    #rgbConverter
-    *ngIf="colorSpacesTypes[fromColorSpace] == 'HEX'"
-    [converters]="converters"
-    (colorChange)="colorChange($event)"
-  ></app-hexsettings>
-  <app-lchsettings
-    #rgbConverter
-    *ngIf="colorSpacesTypes[fromColorSpace] == 'LCH'"
-    [converters]="converters"
-    (colorChange)="colorChange($event)"
-  ></app-lchsettings>
+  <app-rgbsettings [active]="colorSpacesTypes[fromColorSpace] == 'RGB'" [numeric]="numeric1" [converters]="converters" (colorChange)="colorChange($event)"></app-rgbsettings>
+  <app-labsettings [active]="colorSpacesTypes[fromColorSpace] == 'LAB'" [numeric]="numeric1" [converters]="converters" (colorChange)="colorChange($event)"></app-labsettings>
+  <app-cmysettings [active]="colorSpacesTypes[fromColorSpace] == 'CMY'" [numeric]="numeric1" [converters]="converters" (colorChange)="colorChange($event)"></app-cmysettings>
+  <app-cmyksettings [active]="colorSpacesTypes[fromColorSpace] == 'CMYK'" [numeric]="numeric1" [converters]="converters" (colorChange)="colorChange($event)"></app-cmyksettings>
+  <app-hexsettings [active]="colorSpacesTypes[fromColorSpace] == 'HEX'" [converters]="converters" (colorChange)="colorChange($event)"></app-hexsettings>
+  <app-lchsettings [active]="colorSpacesTypes[fromColorSpace] == 'LCH'" [numeric]="numeric1" [converters]="converters" (colorChange)="colorChange($event)"></app-lchsettings>
 
   <ion-card>
     <ion-card-header> <ion-card-title>Resultados</ion-card-title> </ion-card-header>
-    <ion-card-content>
-      <canvas
-        #canvasColorConverter
-        id="canvasColorConverter"
-        height="600"
-        width="1000"
-        style="height:100%; width:100%"
-      ></canvas>
-    </ion-card-content>
+    <ion-card-content> <canvas #canvasColorConverter id="canvasColorConverter" height="600" width="1000" style="height:100%; width:100%"></canvas> </ion-card-content>
   </ion-card>
 </ion-content>

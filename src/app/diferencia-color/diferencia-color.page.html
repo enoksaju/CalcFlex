@@ -10,30 +10,35 @@
     <ion-fab-button mini color="tertiary" (click)="share()"><ion-icon name="share"></ion-icon></ion-fab-button>
   </ion-fab>
   <ion-item>
+    <ion-label> Usar valores numericos</ion-label>
+    <ion-checkbox slot="start" [checked]="numeric1" [(ngModel)]="numeric1" (ionChange)="changeSelected('numeric1DC', numeric1)"></ion-checkbox>
+  </ion-item>
+
+  <ion-item>
     <ion-label>Master desde</ion-label>
-    <ion-select [(ngModel)]="fromColorSpaceMaster" interface="popover">
+    <ion-select [(ngModel)]="fromColorSpaceMaster" interface="popover" (ionChange)="changeSelectedColorSpaceMaster()">
       <ion-select-option *ngFor="let sColor of colorSpaces" [value]="sColor">{{ colorSpacesTypes[sColor] }}</ion-select-option>
     </ion-select>
   </ion-item>
 
-  <app-rgbsettings *ngIf="colorSpacesTypes[fromColorSpaceMaster] == 'RGB'" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"> </app-rgbsettings>
-  <app-labsettings *ngIf="colorSpacesTypes[fromColorSpaceMaster] == 'LAB'" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-labsettings>
-  <app-cmysettings *ngIf="colorSpacesTypes[fromColorSpaceMaster] == 'CMY'" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-cmysettings>
-  <app-cmyksettings *ngIf="colorSpacesTypes[fromColorSpaceMaster] == 'CMYK'" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-cmyksettings>
-  <app-hexsettings *ngIf="colorSpacesTypes[fromColorSpaceMaster] == 'HEX'" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-hexsettings>
-  <app-lchsettings *ngIf="colorSpacesTypes[fromColorSpaceMaster] == 'LCH'" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-lchsettings>
+  <app-rgbsettings [active]="colorSpacesTypes[fromColorSpaceMaster] == 'RGB'" [numeric]="numeric1" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"> </app-rgbsettings>
+  <app-labsettings [active]="colorSpacesTypes[fromColorSpaceMaster] == 'LAB'" [numeric]="numeric1" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-labsettings>
+  <app-cmysettings [active]="colorSpacesTypes[fromColorSpaceMaster] == 'CMY'" [numeric]="numeric1" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-cmysettings>
+  <app-cmyksettings [active]="colorSpacesTypes[fromColorSpaceMaster] == 'CMYK'" [numeric]="numeric1" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-cmyksettings>
+  <app-hexsettings [active]="colorSpacesTypes[fromColorSpaceMaster] == 'HEX'" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-hexsettings>
+  <app-lchsettings [active]="colorSpacesTypes[fromColorSpaceMaster] == 'LCH'" [numeric]="numeric1" [converters]="convertersMaster" (colorChange)="changeColorMaster($event)"></app-lchsettings>
   <ion-item>
     <ion-label>Sample desde</ion-label>
-    <ion-select [(ngModel)]="fromColorSpaceSample" interface="popover">
+    <ion-select [(ngModel)]="fromColorSpaceSample" interface="popover" (ionChange)="changeSelectedColorSpaceSample()">
       <ion-select-option *ngFor="let sColor of colorSpaces" [value]="sColor">{{ colorSpacesTypes[sColor] }}</ion-select-option>
     </ion-select>
   </ion-item>
-  <app-rgbsettings *ngIf="colorSpacesTypes[fromColorSpaceSample] == 'RGB'" [converters]="convertersSample" (colorChange)="changeColorSample($event)"> </app-rgbsettings>
-  <app-labsettings *ngIf="colorSpacesTypes[fromColorSpaceSample] == 'LAB'" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-labsettings>
-  <app-cmysettings *ngIf="colorSpacesTypes[fromColorSpaceSample] == 'CMY'" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-cmysettings>
-  <app-cmyksettings *ngIf="colorSpacesTypes[fromColorSpaceSample] == 'CMYK'" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-cmyksettings>
-  <app-hexsettings *ngIf="colorSpacesTypes[fromColorSpaceSample] == 'HEX'" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-hexsettings>
-  <app-lchsettings *ngIf="colorSpacesTypes[fromColorSpaceSample] == 'LCH'" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-lchsettings>
+  <app-rgbsettings [active]="colorSpacesTypes[fromColorSpaceSample] == 'RGB'" [numeric]="numeric1" [converters]="convertersSample" (colorChange)="changeColorSample($event)"> </app-rgbsettings>
+  <app-labsettings [active]="colorSpacesTypes[fromColorSpaceSample] == 'LAB'" [numeric]="numeric1" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-labsettings>
+  <app-cmysettings [active]="colorSpacesTypes[fromColorSpaceSample] == 'CMY'" [numeric]="numeric1" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-cmysettings>
+  <app-cmyksettings [active]="colorSpacesTypes[fromColorSpaceSample] == 'CMYK'" [numeric]="numeric1" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-cmyksettings>
+  <app-hexsettings [active]="colorSpacesTypes[fromColorSpaceSample] == 'HEX'" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-hexsettings>
+  <app-lchsettings [active]="colorSpacesTypes[fromColorSpaceSample] == 'LCH'" [numeric]="numeric1" [converters]="convertersSample" (colorChange)="changeColorSample($event)"></app-lchsettings>
   <ion-card>
     <ion-card-header> <ion-card-title>Resultados</ion-card-title> </ion-card-header>
     <ion-card-content> <canvas #canvasDifColor id="canvasDifColor" height="600" width="1000" style="height:100%; width:100%;"></canvas> </ion-card-content>

@@ -31,8 +31,16 @@ export class ConverterComparer implements IConverters {
 
   constructor(options?: { R?: number; G?: number; B?: number }) {
     const settings = Object.assign({ R: 0, G: 0, B: 0 }, options);
+
+    // CreateInstanceColorSpace( ColorSpacesTypes.LAB, )
+
     this.rgb = new Rgb().initialize(settings);
-    this.updateFromColor(this.rgb);
+    // this.updateFromColor(this.rgb);
+    this.lab = new Lab().initialize(settings);
+    this.cmy = new Cmy().initialize(settings);
+    this.cmyk = new Cmyk().initialize(settings);
+    this.lch = new Lch().initialize(settings);
+    this.hex = new Hex().initialize(settings);
   }
 
   updateFromColor(colorSpace: IColorSpace) {

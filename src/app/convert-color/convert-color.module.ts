@@ -7,13 +7,8 @@ import { IonicModule } from '@ionic/angular';
 
 import { ConvertColorPage } from './convert-color.page';
 import { FlexLayoutModule } from '@angular/flex-layout';
-import { LabsettingsComponent } from './settings/labsettings.component';
-import { RgbsettingsComponent } from './settings/rgbsettings.component';
-import { CmyksettingsComponent } from './settings/cmyksettings.component';
-import { CmysettingsComponent } from './settings/cmysettings.component';
-import { LchsettingsComponent } from './settings/lchsettings.component';
-import { HexsettingsComponent } from './settings/hexsettings.component';
 import { IonicStorageModule } from '@ionic/storage';
+import { SettingsColorsModule } from '../settings-colors/settings-colors.module';
 
 const routes: Routes = [
   {
@@ -23,7 +18,7 @@ const routes: Routes = [
 ];
 
 @NgModule({
-  imports: [CommonModule, FormsModule, FlexLayoutModule, IonicModule, IonicStorageModule.forRoot(), RouterModule.forChild(routes)],
-  declarations: [ConvertColorPage, RgbsettingsComponent, LabsettingsComponent, CmysettingsComponent, CmyksettingsComponent, LchsettingsComponent, HexsettingsComponent],
+  imports: [CommonModule, FormsModule, FlexLayoutModule, IonicModule, IonicStorageModule.forRoot(), RouterModule.forChild(routes), SettingsColorsModule],
+  declarations: [ConvertColorPage],
 })
 export class ConvertColorPageModule {}
