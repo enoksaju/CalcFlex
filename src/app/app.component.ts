@@ -15,29 +15,34 @@ import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
 export class AppComponent {
   public appPages = [
     {
-      title: 'Home',
+      title: 'Inicio',
       url: '/home',
-      icon: 'home',
+      srcIcon: 'assets/icons/house.svg',
     },
     {
       title: 'Metros Lineales',
       url: '/ml',
-      srcIcon: 'assets/icons/ruler.svg',
+      srcIcon: 'assets/icons/measuring-tape.svg',
     },
     {
       title: 'Alto y Piezas por Rollo',
       url: '/altoRollo',
-      srcIcon: 'assets/icons/toilet-paper.svg',
+      srcIcon: 'assets/icons/roll.svg',
     },
     {
       title: 'Convertir Color',
       url: '/convertColor',
-      icon: 'color-palette',
+      srcIcon: 'assets/icons/cmy.svg',
     },
     {
-      title: 'Diferencia de Color',
+      title: 'Comparar Color',
       url: '/diferenciaColor',
-      icon: 'contrast',
+      srcIcon: 'assets/icons/contrast.svg',
+    },
+    {
+      title: 'Catalogo Pantone®',
+      url: '/catalogoPant',
+      srcIcon: 'assets/icons/color-palette.svg',
     },
   ];
 

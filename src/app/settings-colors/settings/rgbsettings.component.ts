@@ -33,7 +33,7 @@ import { IConverters, IColorSpace } from '../../color-library/color-space';
           <ion-row>
             <ion-col>
               <ion-item>
-                <ion-label color="red" text-right>Red:</ion-label>
+                <ion-label color="red" text-right>R:</ion-label>
                 <ion-input
                   [(ngModel)]="converters.rgb.R"
                   min="0"
@@ -45,7 +45,7 @@ import { IConverters, IColorSpace } from '../../color-library/color-space';
             </ion-col>
             <ion-col>
               <ion-item>
-                <ion-label color="green" text-right>Green:</ion-label>
+                <ion-label color="green" text-right>G:</ion-label>
                 <ion-input
                   [(ngModel)]="converters.rgb.G"
                   min="0"
@@ -57,7 +57,7 @@ import { IConverters, IColorSpace } from '../../color-library/color-space';
             </ion-col>
             <ion-col>
               <ion-item>
-                <ion-label color="blue" text-right>Blue:</ion-label>
+                <ion-label color="blue" text-right>B:</ion-label>
                 <ion-input
                   [(ngModel)]="converters.rgb.B"
                   min="0"

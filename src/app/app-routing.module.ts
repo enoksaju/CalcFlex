@@ -15,6 +15,7 @@ const routes: Routes = [
   { path: 'altoRollo', loadChildren: './alto-rollo/alto-rollo.module#AltoRolloPageModule' }, 
   { path: 'convertColor', loadChildren: './convert-color/convert-color.module#ConvertColorPageModule' },
   { path: 'diferenciaColor', loadChildren: './diferencia-color/diferencia-color.module#DiferenciaColorPageModule' },
+  { path: 'catalogoPant', loadChildren: './catalogo-pant/catalogo-pant.module#CatalogoPantPageModule' },
 ];
 
 @NgModule({

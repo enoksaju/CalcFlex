@@ -137,6 +137,26 @@ interface IColorSpaceComparison {
   ToValue(): number;
 }
 
+export enum ColorComparisonsTypes {
+  CMC,
+  CieDe2000,
+  Cie1976,
+  Cie94,
+}
+
+export function getColorComparison(comparison: ColorComparisonsTypes) {
+  switch (comparison) {
+    case ColorComparisonsTypes.CMC:
+      return new CmcComparison();
+    case ColorComparisonsTypes.Cie1976:
+      return new Cie1976Comparison();
+    case ColorComparisonsTypes.Cie94:
+      return new Cie94Comparison();
+    case ColorComparisonsTypes.CieDe2000:
+      return new CieDe2000Comparison();
+  }
+}
+
 export class CmcComparison implements IColorSpaceComparison {
   public static DefaultLightness = 2.0;
   public static DefaultChroma = 1.0;
@@ -202,7 +222,180 @@ export class CmcComparison implements IColorSpaceComparison {
     return `&Delta;CMC: ${this.ToValue().toFixed(2)} <br/> &Delta;L: ${this.deltaL.toFixed(2)} &Delta;A: ${this.deltaA.toFixed(2)} &Delta;B: ${this.deltaB.toFixed(2)}`;
   }
 }
+export class CieDe2000Comparison implements IColorSpaceComparison {
+  CIEDE2000: number;
 
+  Compare(a: IColorSpace, b: IColorSpace): this {
+    // Set weighting factors to 1
+    const k_L = 1.0;
+    const k_C = 1.0;
+    const k_H = 1.0;
+
+    // Change Color Space to L*a*b:
+    const lab1 = a.To(ColorSpacesTypes.LAB) as Lab;
+    const lab2 = b.To(ColorSpacesTypes.LAB) as Lab;
+
+    // Calculate Cprime1, Cprime2, Cabbar
+    const c_star_1_ab = Math.sqrt(lab1.A * lab1.A + lab1.B * lab1.B);
+    const c_star_2_ab = Math.sqrt(lab2.A * lab2.A + lab2.B * lab2.B);
+    const c_star_average_ab = (c_star_1_ab + c_star_2_ab) / 2;
+    let c_star_average_ab_pot7 = c_star_average_ab * c_star_average_ab * c_star_average_ab;
+    c_star_average_ab_pot7 *= c_star_average_ab_pot7 * c_star_average_ab;
+
+    const G = 0.5 * (1 - Math.sqrt(c_star_average_ab_pot7 / (c_star_average_ab_pot7 + 6103515625))); // 25^7
+    const a1_prime = (1 + G) * lab1.A;
+    const a2_prime = (1 + G) * lab2.A;
+
+    const C_prime_1 = Math.sqrt(a1_prime * a1_prime + lab1.B * lab1.B);
+    const C_prime_2 = Math.sqrt(a2_prime * a2_prime + lab2.B * lab2.B);
+
+    // Angles in Degree.
+    const h_prime_1 = ((Math.atan2(lab1.B, a1_prime) * 180) / Math.PI + 360) % 360;
+    const h_prime_2 = ((Math.atan2(lab2.B, a2_prime) * 180) / Math.PI + 360) % 360;
+
+    const delta_L_prime = lab2.L - lab1.L;
+    const delta_C_prime = C_prime_2 - C_prime_1;
+
+    const h_bar = Math.abs(h_prime_1 - h_prime_2);
+    let delta_h_prime;
+
+    if (C_prime_1 * C_prime_2 === 0) {
+      delta_h_prime = 0;
+    } else {
+      if (h_bar <= 180) {
+        delta_h_prime = h_prime_2 - h_prime_1;
+      } else if (h_bar > 180 && h_prime_2 <= h_prime_1) {
+        delta_h_prime = h_prime_2 - h_prime_1 + 360.0;
+      } else {
+        delta_h_prime = h_prime_2 - h_prime_1 - 360.0;
+      }
+    }
+
+    const delta_H_prime = 2 * Math.sqrt(C_prime_1 * C_prime_2) * Math.sin((delta_h_prime * Math.PI) / 360);
+
+    // Calculate CIEDE2000
+    const L_prime_average = (lab1.L + lab2.L) / 2;
+    const C_prime_average = (C_prime_1 + C_prime_2) / 2;
+
+    let h_prime_average;
+
+    if (C_prime_1 * C_prime_2 === 0) {
+      h_prime_average = 0;
+    } else {
+      if (h_bar <= 180) {
+        h_prime_average = (h_prime_1 + h_prime_2) / 2;
+      } else if (h_bar > 180 && h_prime_1 + h_prime_2 < 360) {
+        h_prime_average = (h_prime_1 + h_prime_2 + 360) / 2;
+      } else {
+        h_prime_average = (h_prime_1 + h_prime_2 - 360) / 2;
+      }
+    }
+
+    let L_prime_average_minus_50_square = L_prime_average - 50;
+    L_prime_average_minus_50_square *= L_prime_average_minus_50_square;
+
+    const S_L = 1 + (0.015 * L_prime_average_minus_50_square) / Math.sqrt(20 + L_prime_average_minus_50_square);
+    const S_C = 1 + 0.045 * C_prime_average;
+    const T =
+      1 - 0.17 * Math.cos(this.DegToRad(h_prime_average - 30)) + 0.24 * Math.cos(this.DegToRad(h_prime_average * 2)) + 0.32 * Math.cos(this.DegToRad(h_prime_average * 3 + 6)) - 0.2 * Math.cos(this.DegToRad(h_prime_average * 4 - 63));
+
+    const S_H = 1 + 0.015 * T * C_prime_average;
+    let h_prime_average_minus_275_div_25_square = (h_prime_average - 275) / 25;
+    h_prime_average_minus_275_div_25_square *= h_prime_average_minus_275_div_25_square;
+    const delta_theta = 30 * Math.exp(-h_prime_average_minus_275_div_25_square);
+
+    let C_prime_average_pot_7 = C_prime_average * C_prime_average * C_prime_average;
+    C_prime_average_pot_7 *= C_prime_average_pot_7 * C_prime_average;
+    const R_C = 2 * Math.sqrt(C_prime_average_pot_7 / (C_prime_average_pot_7 + 6103515625));
+
+    const R_T = -Math.sin(this.DegToRad(2 * delta_theta)) * R_C;
+
+    const delta_L_prime_div_k_L_S_L = delta_L_prime / (S_L * k_L);
+    const delta_C_prime_div_k_C_S_C = delta_C_prime / (S_C * k_C);
+    const delta_H_prime_div_k_H_S_H = delta_H_prime / (S_H * k_H);
+
+    const CIEDE2000 = Math.sqrt(
+      delta_L_prime_div_k_L_S_L * delta_L_prime_div_k_L_S_L + delta_C_prime_div_k_C_S_C * delta_C_prime_div_k_C_S_C + delta_H_prime_div_k_H_S_H * delta_H_prime_div_k_H_S_H + R_T * delta_C_prime_div_k_C_S_C * delta_H_prime_div_k_H_S_H,
+    );
+
+    this.CIEDE2000 = CIEDE2000;
+    return this;
+  }
+  ToString(): string {
+    return `CIEDE2000: ${this.CIEDE2000.toFixed(3)}`;
+  }
+  ToValue(): number {
+    return this.CIEDE2000;
+  }
+
+  private DegToRad(degrees: number) {
+    return (degrees * Math.PI) / 180;
+  }
+}
+export class Cie1976Comparison implements IColorSpaceComparison {
+  Cie1976: number;
+  static Distance(a: number, b: number) {
+    return (a - b) * (a - b);
+  }
+
+  Compare(a: IColorSpace, b: IColorSpace): this {
+    const col1 = a.To(ColorSpacesTypes.LAB) as Lab;
+    const col2 = b.To(ColorSpacesTypes.LAB) as Lab;
+    const differences = Cie1976Comparison.Distance(col1.L, col2.L) + Cie1976Comparison.Distance(col1.A, col2.A) + Cie1976Comparison.Distance(col1.B, col2.B);
+    this.Cie1976 = Math.sqrt(differences);
+    return this;
+  }
+
+  ToString(): string {
+    return `Cie1976: ${this.Cie1976.toFixed(3)}`;
+  }
+  ToValue(): number {
+    return this.Cie1976;
+  }
+}
+export class Cie94Comparison implements IColorSpaceComparison {
+  private constantes: { kl: number; k1: number; k2: number } = { kl: 1.0, k1: 0.45, k2: 0.15 };
+
+  Cie94: number;
+
+  Compare(a: IColorSpace, b: IColorSpace): this {
+    const labA = a.To(ColorSpacesTypes.LAB) as Lab;
+    const labB = b.To(ColorSpacesTypes.LAB) as Lab;
+
+    const deltaL = labA.L - labB.L;
+    const deltaA = labA.A - labB.A;
+    const deltaB = labA.B - labB.B;
+
+    const c1 = Math.sqrt(labA.A * labA.A + labA.B * labA.B);
+    const c2 = Math.sqrt(labB.A * labB.A + labB.B * labB.B);
+    const deltaC = c1 - c2;
+
+    let deltaH = deltaA * deltaA + deltaB * deltaB - deltaC * deltaC;
+    deltaH = deltaH < 0 ? 0 : Math.sqrt(deltaH);
+
+    const sl = 1.0;
+    const kc = 1.0;
+    const kh = 1.0;
+
+    const sc = 1.0 + this.constantes.k1 * c1;
+    const sh = 1.0 + this.constantes.k2 * c1;
+
+    const deltaLKlsl = deltaL / (this.constantes.kl * sl);
+    const deltaCkcsc = deltaC / (kc * sc);
+    const deltaHkhsh = deltaH / (kh * sh);
+    const i = deltaLKlsl * deltaLKlsl + deltaCkcsc * deltaCkcsc + deltaHkhsh * deltaHkhsh;
+
+    this.Cie94 = i < 0 ? 0 : Math.sqrt(i);
+
+    return this;
+  }
+  ToString(): string {
+    return `Cie94: ${this.Cie94.toFixed(3)}`;
+  }
+  ToValue(): number {
+    return this.Cie94;
+  }
+}
 /*
 public delegate double ComparisonAlgorithm(IColorSpace a, IColorSpace b);
 */
