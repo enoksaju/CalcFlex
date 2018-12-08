@@ -1,7 +1,6 @@
 import { Component, OnInit, ViewChild, ElementRef, OnDestroy } from '@angular/core';
 import { ColorSpacesTypes, Rgb, Lab, Xyz, Cmy, Cmyk, Lch, Hex, IConverters, IColorSpace, ConverterComparer } from '../color-library/color-space';
 import { WorkConfigService } from '../work-config.service';
-import { RgbsettingsComponent } from './settings/rgbsettings.component';
 import { Storage } from '@ionic/storage';
 
 const TRASPARENTE_RGBA = 'rgba(0,0,0,0)';

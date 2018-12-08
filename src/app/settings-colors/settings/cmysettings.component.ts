@@ -20,18 +20,28 @@ import { IConverters, IColorSpace } from '../../color-library/color-space';
         </ion-item>
       </ng-container>
       <ng-template #tL>
-        <ion-item>
-          <ion-label color="cyan" position="fixed" text-right>Cyan</ion-label>
-          <ion-input [(ngModel)]="converters.cmy.C" min="0" step="0.01" max="1" type="number" (ionChange)="change()"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label color="magent" position="fixed" text-right>Magenta</ion-label>
-          <ion-input [(ngModel)]="converters.cmy.M" min="0" step="0.01" max="1" type="number" (ionChange)="change()"></ion-input>
-        </ion-item>
-        <ion-item>
-          <ion-label color="yellow" position="fixed" text-right>Amarillo</ion-label>
-          <ion-input [(ngModel)]="converters.cmy.Y" min="0" step="0.01" max="1" type="number" (ionChange)="change()"></ion-input>
-        </ion-item>
+        <ion-grid>
+          <ion-row>
+            <ion-col>
+              <ion-item>
+                <ion-label color="cyan" text-right>C</ion-label>
+                <ion-input [(ngModel)]="converters.cmy.C" min="0" step="0.01" max="1" type="number" (ionChange)="change()"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label color="magent" text-right>M</ion-label>
+                <ion-input [(ngModel)]="converters.cmy.M" min="0" step="0.01" max="1" type="number" (ionChange)="change()"></ion-input>
+              </ion-item>
+            </ion-col>
+            <ion-col>
+              <ion-item>
+                <ion-label color="yellow" text-right>Y</ion-label>
+                <ion-input [(ngModel)]="converters.cmy.Y" min="0" step="0.01" max="1" type="number" (ionChange)="change()"></ion-input>
+              </ion-item>
+            </ion-col>
+          </ion-row>
+        </ion-grid>
       </ng-template>
     </ng-container>
   `,

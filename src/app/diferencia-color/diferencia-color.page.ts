@@ -1,5 +1,19 @@
 import { Component, OnInit, ViewChild, ElementRef } from '@angular/core';
-import { IConverters, Rgb, Lab, Cmy, Cmyk, Lch, Hex, ConverterComparer, IRgb, ColorSpacesTypes, IColorSpace, CreateInstanceColorSpace } from '../color-library/color-space';
+import {
+  IConverters,
+  Rgb,
+  Lab,
+  Cmy,
+  Cmyk,
+  Lch,
+  Hex,
+  ConverterComparer,
+  IRgb,
+  ColorSpacesTypes,
+  IColorSpace,
+  CreateInstanceColorSpace,
+  CmcComparison
+} from '../color-library/color-space';
 
 import * as chroma from 'chroma-js';
 import { Thumbnail } from '@ionic/angular';
@@ -15,12 +29,13 @@ const distanceLabel = 20;
 @Component({
   selector: 'app-diferencia-color',
   templateUrl: './diferencia-color.page.html',
-  styleUrls: ['./diferencia-color.page.scss'],
+  styleUrls: ['./diferencia-color.page.scss']
 })
 export class DiferenciaColorPage implements OnInit {
   @ViewChild('canvasDifColor') public canvas: ElementRef;
 
   numeric1: boolean;
+  loading = true;
 
   colorSpacesTypes = ColorSpacesTypes;
   colorSpaces = Object.keys(ColorSpacesTypes).filter(f => !isNaN(Number(f)));
@@ -30,8 +45,18 @@ export class DiferenciaColorPage implements OnInit {
   convertersSample: ConverterComparer;
   fromColorSpaceSample: string;
 
-  color1: { color: string; x: number; y: number; L?: number; A?: number; B?: number } = { color: '#000', x: initial, y: initial, L: 0 };
-  color2: { color: string; x: number; y: number; L?: number; A?: number; B?: number } = { color: '#000', x: initial, y: initial, L: 0 };
+  color1: { color: string; x: number; y: number; L?: number; A?: number; B?: number } = {
+    color: '#000',
+    x: initial,
+    y: initial,
+    L: 0
+  };
+  color2: { color: string; x: number; y: number; L?: number; A?: number; B?: number } = {
+    color: '#000',
+    x: initial,
+    y: initial,
+    L: 0
+  };
 
   SelectColor1 = true;
 
@@ -45,7 +70,17 @@ export class DiferenciaColorPage implements OnInit {
   }
 
   ngOnInit() {
+    this.loading = true;
     this.loadSettings();
+
+    setTimeout(() => {
+      this.loading = false;
+      setTimeout(() => {
+        this.changeSelectedColorSpaceMaster();
+        this.changeSelectedColorSpaceSample();
+        this.draw();
+      }, 50);
+    }, 2000);
   }
 
   async loadSettings() {
@@ -53,7 +88,13 @@ export class DiferenciaColorPage implements OnInit {
 
     let col: any = await this.storage.get('color1DC');
     let fr: string = (col.ColorSpaceName as string).toUpperCase();
-    const color1 = CreateInstanceColorSpace(this.colorSpacesTypes[fr], { Lab: col, Rgb: col, Lch: col, Hex: col, CMYK: col });
+    const color1 = CreateInstanceColorSpace(this.colorSpacesTypes[fr], {
+      Lab: col,
+      Rgb: col,
+      Lch: col,
+      Hex: col,
+      CMYK: col
+    });
     this.convertersMaster.updateFromColor(color1);
 
     let s = await this.storage.get('masterDC');
@@ -62,7 +103,13 @@ export class DiferenciaColorPage implements OnInit {
     // this.convertersSample = new ConverterComparer(await this.storage.get('color2DC'));
     col = await this.storage.get('color2DC');
     fr = (col.ColorSpaceName as string).toUpperCase();
-    const color2 = CreateInstanceColorSpace(this.colorSpacesTypes[fr], { Lab: col, Rgb: col, Lch: col, Hex: col, CMYK: col });
+    const color2 = CreateInstanceColorSpace(this.colorSpacesTypes[fr], {
+      Lab: col,
+      Rgb: col,
+      Lch: col,
+      Hex: col,
+      CMYK: col
+    });
     this.convertersSample.updateFromColor(color2);
 
     s = await this.storage.get('sampleDC');
@@ -70,8 +117,6 @@ export class DiferenciaColorPage implements OnInit {
 
     const n1 = (await this.storage.get('numeric1DC')) as boolean;
     this.numeric1 = n1;
-
-    this.draw();
   }
 
   share() {
@@ -143,7 +188,9 @@ export class DiferenciaColorPage implements OnInit {
     const ctx = canvasEl.getContext('2d');
 
     this.clearCanvas(canvasEl);
-    ctx.font = 'normal 14px Arial';
+
+    const fontSize = 14;
+    ctx.font = `normal ${fontSize}px Roboto`;
     const cv = document.createElement('canvas');
     cv.width = sizeWheel;
     cv.height = sizeWheel;
@@ -154,7 +201,11 @@ export class DiferenciaColorPage implements OnInit {
     for (let x = 0; x < sizeWheel; x++) {
       for (let y = 0; y < sizeWheel; y++) {
         const offset = 4 * (y * sizeWheel + x);
-        const col = chroma.lab(this.color1.L, ((x - sizeWheel / 2) * 100) / (sizeWheel / 2), (((y - sizeWheel / 2) * 100) / (sizeWheel / 2)) * -1);
+        const col = chroma.lab(
+          this.color1.L,
+          ((x - sizeWheel / 2) * 100) / (sizeWheel / 2),
+          (((y - sizeWheel / 2) * 100) / (sizeWheel / 2)) * -1
+        );
         bitmap.data[offset + 0] = col.rgb()[0]; // hsv[0];
         bitmap.data[offset + 1] = col.rgb()[1]; // hsv[1];
         bitmap.data[offset + 2] = col.rgb()[2]; // hsv[2];
@@ -198,22 +249,22 @@ export class DiferenciaColorPage implements OnInit {
     let y1L, y2L, xL; // x2L;
     xL = widthColorSpace + 45;
 
-    y1L = (widthColorSpace / 100) * (100 - this.color1.L) + 14;
-    y2L = (widthColorSpace / 100) * (100 - this.color2.L) + 14;
+    y1L = (widthColorSpace / 100) * (100 - this.color1.L) + fontSize;
+    y2L = (widthColorSpace / 100) * (100 - this.color2.L) + fontSize;
 
-    y1L += (y1L > y2L || y1L < 25) && y1L < widthColorSpace ? 0 : -14;
+    y1L += (y1L > y2L || y1L < 25) && y1L < widthColorSpace ? 0 : -fontSize;
     if (!(y2L > y1L || y2L < 25)) {
-      y2L += -14;
+      y2L += -fontSize;
     } else {
-      if (y1L < 26 + 14 && y2L < y1L + 15) {
-        y2L = y1L + 14;
+      if (y1L < 26 + fontSize && y2L < y1L + fontSize + 1) {
+        y2L = y1L + fontSize;
       } else if (y2L > widthColorSpace - 25) {
         if (y1L >= widthColorSpace - 28) {
           console.log('condicion2.1');
 
-          y2L = y1L - 15;
+          y2L = y1L - fontSize + 1;
         } else {
-          y2L += -14;
+          y2L += -fontSize;
         }
       }
     }
@@ -273,27 +324,39 @@ export class DiferenciaColorPage implements OnInit {
 
     let x1, y1, x2, y2;
     let needMoveX, needMoveX2;
-    if ((this.color1.x < this.color2.x || this.color1.x > widthColorSpace - sizeText.width) && this.color1.x > sizeText.width + distanceLabel) {
+    if (
+      (this.color1.x < this.color2.x || this.color1.x > widthColorSpace - sizeText.width) &&
+      this.color1.x > sizeText.width + distanceLabel
+    ) {
       x1 = this.color1.x - distanceLabel - sizeText.width;
     } else {
       x1 = this.color1.x + distanceLabel;
       needMoveX = true;
     }
 
-    if ((this.color2.y < this.color1.y || this.color1.y < distanceLabel + 10) && this.color1.y < widthColorSpace - distanceLabel - 10) {
+    if (
+      (this.color2.y < this.color1.y || this.color1.y < distanceLabel + 10) &&
+      this.color1.y < widthColorSpace - distanceLabel - 10
+    ) {
       y1 = this.color1.y + distanceLabel;
     } else {
       y1 = this.color1.y - distanceLabel;
     }
 
-    if ((this.color2.x < this.color1.x || this.color2.x > widthColorSpace - sizeText2.width) && this.color2.x > sizeText2.width + distanceLabel) {
+    if (
+      (this.color2.x < this.color1.x || this.color2.x > widthColorSpace - sizeText2.width) &&
+      this.color2.x > sizeText2.width + distanceLabel
+    ) {
       x2 = this.color2.x - distanceLabel - sizeText2.width;
     } else {
       x2 = this.color2.x + distanceLabel;
       needMoveX2 = true;
     }
 
-    if ((this.color2.y < this.color1.y && !(this.color2.y < distanceLabel + 10)) || this.color2.y > widthColorSpace - distanceLabel - 10) {
+    if (
+      (this.color2.y < this.color1.y && !(this.color2.y < distanceLabel + 10)) ||
+      this.color2.y > widthColorSpace - distanceLabel - 10
+    ) {
       y2 = this.color2.y - distanceLabel;
     } else {
       y2 = this.color2.y + distanceLabel;
@@ -347,6 +410,18 @@ export class DiferenciaColorPage implements OnInit {
     ctx.fillText(c2T, x2, y2);
 
     // Square Colors
+    ctx.fillStyle = '#555';
+    ctx.font = `bold 25px Roboto`;
+    ctx.fillText('Master', widthColorSpace + 100, 35);
+    ctx.fillText('Muestra', widthColorSpace + 250, 35);
+
+    const cmc = this.convertersMaster.lab.Compare(this.convertersSample.lab, new CmcComparison());
+
+    ctx.fillText(`ΔCMC:\n ${cmc.deltaCMC.toFixed(2)}`, widthColorSpace + 150, 250);
+    ctx.fillText(`ΔL:\n ${cmc.deltaL.toFixed(2)}`, widthColorSpace + 150, 280);
+    ctx.fillText(`ΔA:\n ${cmc.deltaA.toFixed(2)}`, widthColorSpace + 150, 310);
+    ctx.fillText(`ΔB:\n ${cmc.deltaB.toFixed(2)}`, widthColorSpace + 150, 340);
+
     ctx.fillStyle = this.color1.color;
     ctx.fillRect(widthColorSpace + 100, 50, 150, 150);
     ctx.fillStyle = this.color2.color;
