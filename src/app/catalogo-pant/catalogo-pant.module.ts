@@ -6,6 +6,7 @@ import { Routes, RouterModule } from '@angular/router';
 import { IonicModule } from '@ionic/angular';
 
 import { CatalogoPantPage } from './catalogo-pant.page';
+import { FilterPipePantone } from '../filterPantone.pipe';
 
 const routes: Routes = [
   {
@@ -21,6 +22,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [CatalogoPantPage]
+  declarations: [CatalogoPantPage, FilterPipePantone]
 })
 export class CatalogoPantPageModule {}

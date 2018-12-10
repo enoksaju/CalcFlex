@@ -8,4 +8,22 @@
   </ion-toolbar>
 </ion-header>
 
-<ion-content padding> </ion-content>
+<ion-content>
+  <input [(ngModel)]="searchPantoneText" placeholder="search text goes here" />
+
+  <ng-container *ngIf="searchPantoneText === null || searchPantoneText === ''; else: search">
+    <ion-list>
+      <ion-item *ngFor="let p of (pantoneColors | slice: 0:limit)">
+        <div slot="start" style="width: 40%; height: 100px;" [style.background-color]="p.hex">{{ p.hex }}</div>
+        <ion-label>{{ p.name }} </ion-label>
+      </ion-item>
+    </ion-list>
+
+    <ion-infinite-scroll threshold="5%" (ionInfinite)="loadData($event)"> <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data..."> </ion-infinite-scroll-content> </ion-infinite-scroll>
+  </ng-container>
+  <ng-template #search>
+    <ion-list>
+      <ion-item *ngFor="let p of (pantoneColors | filterPantone: searchPantoneText)"> {{ p.name }} </ion-item>
+    </ion-list>
+  </ng-template>
+</ion-content>

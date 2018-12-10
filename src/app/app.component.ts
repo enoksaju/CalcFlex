@@ -7,6 +7,7 @@ import { SQLite, SQLiteObject } from '@ionic-native/sqlite/ngx';
 import { MaterialesService } from './Materiales.service';
 import { WorkConfigService } from './work-config.service';
 import { AndroidFullScreen } from '@ionic-native/android-full-screen/ngx';
+import { PantoneService } from './pantone.service';
 
 @Component({
   selector: 'app-root',
@@ -54,6 +55,7 @@ export class AppComponent {
     private materialesService: MaterialesService,
     private workConfigService: WorkConfigService,
     private androidFullScreen: AndroidFullScreen,
+    private pantoneService: PantoneService,
   ) {
     this.initializeApp();
   }
@@ -80,16 +82,8 @@ export class AppComponent {
   }
 
   private async createDB() {
-    this.sqlite
-      .create({ name: 'Calculadora.db', location: 'default' })
-      .then(db => {
-        return this.materialesService.setDB(db);
-      })
-      .then(() => {
-        this.splashScreen.hide();
-      })
-      .catch(error => {
-        console.error(error);
-      });
+    this.materialesService.setDB(await this.sqlite.create({ name: 'Calculadora.db', location: 'default' }));
+    await this.pantoneService.createDB();
+    this.splashScreen.hide();
   }
 }
