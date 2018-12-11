@@ -22,7 +22,7 @@ const tryCols: IPantone[] = [
     page: 0,
     rgb: -595103,
     row: 0,
-    y: 56,
+    y: 56
   },
   {
     Id: 2,
@@ -37,7 +37,7 @@ const tryCols: IPantone[] = [
     page: 0,
     rgb: -529848,
     row: 1,
-    y: 68,
+    y: 68
   },
   {
     Id: 3,
@@ -52,7 +52,7 @@ const tryCols: IPantone[] = [
     page: 0,
     rgb: -204032,
     row: 2,
-    y: 95,
+    y: 95
   },
   {
     Id: 4,
@@ -67,7 +67,7 @@ const tryCols: IPantone[] = [
     page: 0,
     rgb: -74496,
     row: 3,
-    y: 100,
+    y: 100
   },
   {
     Id: 5,
@@ -82,7 +82,7 @@ const tryCols: IPantone[] = [
     page: 0,
     rgb: -3823360,
     row: 4,
-    y: 100,
+    y: 100
   },
   {
     Id: 6,
@@ -97,7 +97,7 @@ const tryCols: IPantone[] = [
     page: 0,
     rgb: -5269504,
     row: 5,
-    y: 100,
+    y: 100
   },
   {
     Id: 7,
@@ -112,7 +112,7 @@ const tryCols: IPantone[] = [
     page: 0,
     rgb: -7767513,
     row: 6,
-    y: 88,
+    y: 88
   },
   {
     Id: 8,
@@ -127,7 +127,7 @@ const tryCols: IPantone[] = [
     page: 1,
     rgb: -663132,
     row: 0,
-    y: 27,
+    y: 27
   },
   {
     Id: 9,
@@ -142,7 +142,7 @@ const tryCols: IPantone[] = [
     page: 1,
     rgb: -1255272,
     row: 1,
-    y: 45,
+    y: 45
   },
   {
     Id: 10,
@@ -157,7 +157,7 @@ const tryCols: IPantone[] = [
     page: 1,
     rgb: -1125244,
     row: 2,
-    y: 58,
+    y: 58
   },
   {
     Id: 11,
@@ -172,7 +172,7 @@ const tryCols: IPantone[] = [
     page: 1,
     rgb: -730560,
     row: 3,
-    y: 86,
+    y: 86
   },
   {
     Id: 12,
@@ -187,7 +187,7 @@ const tryCols: IPantone[] = [
     page: 1,
     rgb: -865024,
     row: 4,
-    y: 97,
+    y: 97
   },
   {
     Id: 13,
@@ -202,7 +202,7 @@ const tryCols: IPantone[] = [
     page: 1,
     rgb: -932864,
     row: 5,
-    y: 100,
+    y: 100
   },
   {
     Id: 14,
@@ -217,7 +217,7 @@ const tryCols: IPantone[] = [
     page: 1,
     rgb: -3432366,
     row: 6,
-    y: 79,
+    y: 79
   },
   {
     Id: 15,
@@ -232,7 +232,7 @@ const tryCols: IPantone[] = [
     page: 2,
     rgb: -400057,
     row: 0,
-    y: 75,
+    y: 75
   },
   {
     Id: 16,
@@ -247,7 +247,7 @@ const tryCols: IPantone[] = [
     page: 2,
     rgb: -270046,
     row: 1,
-    y: 92,
+    y: 92
   },
   {
     Id: 17,
@@ -262,7 +262,7 @@ const tryCols: IPantone[] = [
     page: 2,
     rgb: -75008,
     row: 2,
-    y: 98,
+    y: 98
   },
   {
     Id: 18,
@@ -277,7 +277,7 @@ const tryCols: IPantone[] = [
     page: 2,
     rgb: -12032,
     row: 3,
-    y: 100,
+    y: 100
   },
   {
     Id: 19,
@@ -292,7 +292,7 @@ const tryCols: IPantone[] = [
     page: 2,
     rgb: -2446848,
     row: 4,
-    y: 100,
+    y: 100
   },
   {
     Id: 20,
@@ -307,7 +307,7 @@ const tryCols: IPantone[] = [
     page: 2,
     rgb: -5600768,
     row: 5,
-    y: 100,
+    y: 100
   },
   {
     Id: 21,
@@ -322,8 +322,8 @@ const tryCols: IPantone[] = [
     page: 2,
     rgb: -6519790,
     row: 6,
-    y: 100,
-  },
+    y: 100
+  }
 ];
 export interface IPantone {
   Id?: number;
@@ -340,45 +340,62 @@ export interface IPantone {
   y?: number;
   k?: number;
   hex?: string;
+  rgbValues?: { r: number; g: number; b: number };
 }
 
 @Injectable({
-  providedIn: 'root',
+  providedIn: 'root'
 })
 export class PantoneService {
   database: SQLiteObject = null;
   private databaseReady: BehaviorSubject<boolean>;
   private pantoneColors_: BehaviorSubject<IPantone[]>;
 
-  constructor(public sqlitePorter: SQLitePorter, private storage: Storage, private sqlite: SQLite, private platform: Platform, private http: HttpClient) {
+  constructor(
+    public sqlitePorter: SQLitePorter,
+    private storage: Storage,
+    private sqlite: SQLite,
+    private platform: Platform,
+    private http: HttpClient
+  ) {
     this.databaseReady = new BehaviorSubject(false);
 
     tryCols.forEach(cc => {
-      cc.hex = chroma.lab(cc.l, cc.a, cc.b).hex();
+      cc.rgbValues = this.numberToRgb(cc.rgb);
+      cc.hex = chroma.rgb(cc.rgbValues.r, cc.rgbValues.g, cc.rgbValues.b).hex();
     });
 
     this.pantoneColors_ = new BehaviorSubject(tryCols);
   }
 
-  setDB(db: SQLiteObject) {
+  numberToRgb(num: number): { r: number; g: number; b: number } {
+    const r = (num & 0xff0000) >> 16;
+    const g = (num & 0x00ff00) >> 8;
+    const b = num & 0x0000ff;
+    return { r: r, g: g, b: b };
+  }
+
+  async setDB(db: SQLiteObject) {
     if (this.database === null) {
       console.log('the databse are null, setting new database');
       this.database = db;
     }
-
-    return this.storage.get('database_filled').then(val => {
-      if (val) {
-        console.log('the Pantone database are filled');
-        this.databaseReady.next(true);
-      } else {
-        console.log('filling Pantone Database');
-        this.fillDatabase();
-      }
-    });
+    await this.fillDatabase();
+    this.databaseReady.next(true);
+    
+    // return this.storage.get('database_filled').then(val => {
+    //   if (val) {
+    //     console.log('the Pantone database are filled');
+    //     this.databaseReady.next(true);
+    //   } else {
+    //     console.log('filling Pantone Database');
+    //     this.fillDatabase();
+    //   }
+    // });
   }
 
   fillDatabase() {
-    this.http
+    return this.http
       .get('assets/data/pantoneCatalogCU.sql', { responseType: 'text' })
       .toPromise()
       .then(dt => {
@@ -402,8 +419,24 @@ export class PantoneService {
         if (data.rows.length > 0) {
           for (let i = 0; i < data.rows.length; i++) {
             const dt = data.rows.item(i);
-            const hex = chroma.lab(dt.l, dt.a, dt.b).hex();
-            colors.push({ Id: dt.Id, page: dt.page, row: dt.row, name: dt.name, l: dt.l, a: dt.a, b: dt.b, rgb: dt.rgb, c: dt.c, m: dt.m, y: dt.y, k: dt.k, hex: hex });
+            const rgbValues = this.numberToRgb(dt.rgb);
+            const hex = chroma.rgb(rgbValues.r, rgbValues.g, rgbValues.b).hex();
+            colors.push({
+              Id: dt.Id,
+              page: dt.page,
+              row: dt.row,
+              name: dt.name,
+              l: dt.l,
+              a: dt.a,
+              b: dt.b,
+              rgb: dt.rgb,
+              c: dt.c,
+              m: dt.m,
+              y: dt.y,
+              k: dt.k,
+              hex: hex,
+              rgbValues: rgbValues
+            });
           }
         }
         this.pantoneColors_.next(colors);
