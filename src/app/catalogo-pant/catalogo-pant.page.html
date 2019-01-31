@@ -6,57 +6,17 @@
       <span> Catalogo Pantone®</span>
     </ion-title>
   </ion-toolbar>
-  <ion-toolbar> <ion-searchbar [(ngModel)]="searchPantoneText" placeholder="Buscar" debounce="1500"></ion-searchbar> </ion-toolbar>
+  <ion-toolbar color="primary"> <ion-searchbar [(ngModel)]="searchPantoneText" animated placeholder="Buscar" debounce="1500"></ion-searchbar> </ion-toolbar>
 </ion-header>
 
 <ion-content>
   <ng-container *ngIf="searchPantoneText === null || searchPantoneText === ''; else: search">
-    <ion-list>
-      <ion-item *ngFor="let p of (pantoneColors | slice: 0:limit)" fxLayout="row">
-        <div fxFlex="120px">
-          <ion-card>
-            <div style="height: 100px" [style.background-color]="p.hex"></div>
-            <ion-card-header>
-              <ion-card-subtitle>{{ p.name }}</ion-card-subtitle>
-            </ion-card-header>
-          </ion-card>
-        </div>
-        <div fxFlex="100%" fxLayout="column">
-          <ion-text class="p-properties">
-            <p>Lab({{ p.l }}, {{ p.a }}, {{ p.b }})</p>
-            <p>CMYK({{ p.c }}, {{ p.m }}, {{ p.y }}, {{ p.k }})</p>
-            <p>Hex({{ p.hex }})</p>
-            <p>RGB({{ p.rgbValues.r }}, {{ p.rgbValues.g }}, {{ p.rgbValues.b }})</p>
-          </ion-text>
-        </div>
-      </ion-item>
-    </ion-list>
-
-    <ion-infinite-scroll threshold="5%" (ionInfinite)="loadData($event)">
-      <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data...">
-      </ion-infinite-scroll-content>
-    </ion-infinite-scroll>
+    <ion-list> <app-target [Pantone]="p" *ngFor="let p of (pantoneColors | slice: 0:limit)"></app-target> </ion-list>
+    <ion-infinite-scroll threshold="5%" (ionInfinite)="loadData($event)"> <ion-infinite-scroll-content loadingSpinner="bubbles" loadingText="Loading more data..."> </ion-infinite-scroll-content> </ion-infinite-scroll>
   </ng-container>
   <ng-template #search>
     <ion-list>
-      <ion-item *ngFor="let p of (pantoneColors | filterPantone: searchPantoneText)" fxLayout="row">
-        <div fxFlex="120px">
-          <ion-card>
-            <div style="height: 100px" [style.background-color]="p.hex"></div>
-            <ion-card-header>
-              <ion-card-title>{{ p.name }}</ion-card-title>
-            </ion-card-header>
-          </ion-card>
-        </div>
-        <div fxFlex="100%" fxLayout="column">
-          <ion-text class="p-properties">
-            <p>Lab({{ p.l }}, {{ p.a }}, {{ p.b }})</p>
-            <p>CMYK({{ p.c }}, {{ p.m }}, {{ p.y }}, {{ p.k }})</p>
-            <p>Hex({{ p.hex }})</p>
-            <p>RGB({{ p.rgbValues.r }}, {{ p.rgbValues.g }}, {{ p.rgbValues.b }})</p>
-          </ion-text>
-        </div>
-      </ion-item>
+      <ion-list> <app-target [Pantone]="p" *ngFor="let p of (pantoneColors | filterPantone: searchPantoneText)"></app-target> </ion-list>
     </ion-list>
   </ng-template>
 </ion-content>

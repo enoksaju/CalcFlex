@@ -8,6 +8,7 @@ import { FlexLayoutModule } from '@angular/flex-layout';
 
 import { CatalogoPantPage } from './catalogo-pant.page';
 import { FilterPipePantone } from '../filterPantone.pipe';
+import { TargetComponent } from './target/target.component';
 
 const routes: Routes = [
   {
@@ -24,6 +25,6 @@ const routes: Routes = [
     IonicModule,
     RouterModule.forChild(routes)
   ],
-  declarations: [CatalogoPantPage, FilterPipePantone]
+  declarations: [CatalogoPantPage, FilterPipePantone, TargetComponent]
 })
 export class CatalogoPantPageModule {}

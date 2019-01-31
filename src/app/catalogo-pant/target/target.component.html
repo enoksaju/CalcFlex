@@ -1,0 +1,18 @@
+<ion-item fxLayout="row">
+  <div fxFlex="120px">
+    <ion-card>
+      <div style="height: 100px" [style.background-color]="Pantone.hex"></div>
+      <ion-card-header text-center>
+        <ion-card-subtitle>{{ Pantone.name }}</ion-card-subtitle>
+      </ion-card-header>
+    </ion-card>
+  </div>
+  <div fxFlex="100%" fxLayout="column">
+    <ion-text class="p-properties">
+      <p>Lab({{ Pantone.l }}, {{ Pantone.a }}, {{ Pantone.b }})</p>
+      <p>CMYK({{ Pantone.c }}, {{ Pantone.m }}, {{ Pantone.y }}, {{ Pantone.k }})</p>
+      <p>Hex({{ Pantone.hex }})</p>
+      <p>RGB({{ Pantone.rgbValues.r }}, {{ Pantone.rgbValues.g }}, {{ Pantone.rgbValues.b }})</p>
+    </ion-text>
+  </div>
+</ion-item>
